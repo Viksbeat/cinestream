@@ -43,8 +43,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { CheckCircle } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { toast } from 'sonner';
+import VideoUploader from '../components/admin/VideoUploader';
 
 const GENRES = [
   'Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary',
@@ -588,27 +590,46 @@ export default function Admin() {
               </div>
 
               {/* Video */}
-              <div className="space-y-2">
-                <Label>Video URL</Label>
-                <div className="flex gap-2">
-                  <Input
-                    value={formData.video_url}
-                    onChange={(e) => setFormData(prev => ({ ...prev, video_url: e.target.value }))}
-                    placeholder="Video URL or upload"
-                    className="bg-white/5 border-white/10"
-                  />
-                  <Label className="cursor-pointer">
-                    <div className="h-10 px-4 flex items-center justify-center rounded-md border border-white/20 hover:bg-white/10 transition-colors">
-                      <Upload className="w-4 h-4" />
-                    </div>
-                    <input
-                      type="file"
-                      accept="video/*"
-                      className="hidden"
-                      onChange={(e) => handleFileUpload(e, 'video_url')}
-                    />
-                  </Label>
+              <div className="space-y-3">
+                <Label>Video</Label>
+                
+                {/* Bunny.net Video Uploader */}
+                <VideoUploader 
+                  movieTitle={formData.title}
+                  onUploadComplete={(videoUrl, videoId) => {
+                    setFormData(prev => ({ 
+                      ...prev, 
+                      video_url: videoUrl,
+                      bunny_video_id: videoId 
+                    }));
+                  }}
+                />
+
+                {/* Or paste URL */}
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-white/10"></div>
+                  </div>
+                  <div className="relative flex justify-center text-xs">
+                    <span className="bg-[#141414] px-2 text-white/60">or paste URL</span>
+                  </div>
                 </div>
+
+                <Input
+                  value={formData.video_url}
+                  onChange={(e) => setFormData(prev => ({ ...prev, video_url: e.target.value }))}
+                  placeholder="Paste video URL (Bunny.net embed or direct video URL)"
+                  className="bg-white/5 border-white/10"
+                />
+
+                {formData.video_url && (
+                  <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
+                    <p className="text-xs text-green-500 flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4" />
+                      Video URL set: {formData.video_url.substring(0, 50)}...
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Trailer */}
