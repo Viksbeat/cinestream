@@ -290,23 +290,29 @@ export default function Player() {
       {/* Video Player */}
       <div
         ref={containerRef}
-        className="relative bg-black aspect-video max-h-[70vh] mx-auto cursor-pointer"
+        className="relative bg-black aspect-video max-h-[70vh] mx-auto"
         onMouseMove={handleMouseMove}
+        style={{ position: 'relative' }}
       >
         {movie.video_url ? (
           // Check if it's a Bunny.net embed URL
-          movie.video_url.includes('iframe.mediadelivery.net') || movie.video_url.includes('bunnycdn.com') ? (
+          movie.video_url.includes('iframe.mediadelivery.net') || movie.video_url.includes('bunnycdn.com') || movie.video_url.includes('b-cdn.net') ? (
             <iframe
               src={movie.video_url}
               className="w-full h-full"
-              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+              loading="eager"
+              style={{ border: 'none', position: 'absolute', top: 0, left: 0, height: '100%', width: '100%' }}
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
               allowFullScreen
+              title={movie.title}
               onLoad={() => {
                 // Track that video was loaded
-                historyMutation.mutate({
-                  progress: 0,
-                  last_watched: new Date().toISOString()
-                });
+                if (user) {
+                  historyMutation.mutate({
+                    progress: 0,
+                    last_watched: new Date().toISOString()
+                  });
+                }
               }}
             />
           ) : (
