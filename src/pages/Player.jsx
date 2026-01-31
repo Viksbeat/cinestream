@@ -15,6 +15,7 @@ import { toast } from 'sonner';
 import AverageRating from '../components/reviews/AverageRating';
 import ReviewForm from '../components/reviews/ReviewForm';
 import ReviewsList from '../components/reviews/ReviewsList';
+import { getRecommendations } from '../utils/recommendations';
 
 export default function Player() {
   const [user, setUser] = useState(null);
@@ -244,10 +245,15 @@ export default function Player() {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  // Get recommendations
-  const recommendations = allMovies
-    .filter(m => m.id !== movieId && movie?.genre?.some(g => m.genre?.includes(g)))
-    .slice(0, 10);
+  // Get personalized recommendations
+  const recommendations = movie ? getRecommendations({
+    allMovies,
+    currentMovie: movie,
+    watchHistory: history,
+    userReviews: reviews.filter(r => r.user_email === user?.email),
+    userList,
+    limit: 12
+  }) : [];
 
   const isInList = userList.some(item => item.movie_id === movieId);
 
