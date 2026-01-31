@@ -12,6 +12,9 @@ import { Slider } from "@/components/ui/slider";
 import MovieCard from '../components/movies/MovieCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import AverageRating from '../components/reviews/AverageRating';
+import ReviewForm from '../components/reviews/ReviewForm';
+import ReviewsList from '../components/reviews/ReviewsList';
 
 export default function Player() {
   const [user, setUser] = useState(null);
@@ -63,6 +66,16 @@ export default function Player() {
     enabled: !!user?.email,
   });
 
+  // Fetch reviews for this movie
+  const { data: reviews = [] } = useQuery({
+    queryKey: ['reviews', movieId],
+    queryFn: () => base44.entities.Review.filter({ movie_id: movieId, is_approved: true }, '-created_date', 50),
+    enabled: !!movieId,
+  });
+
+  // Get user's review
+  const userReview = reviews.find(r => r.user_email === user?.email);
+
   // Watch history mutation
   const historyMutation = useMutation({
     mutationFn: async (data) => {
@@ -113,6 +126,38 @@ export default function Player() {
     }
     listMutation.mutate(movieToAdd);
   };
+
+  // Submit review mutation
+  const reviewMutation = useMutation({
+    mutationFn: async (reviewData) => {
+      if (userReview) {
+        await base44.entities.Review.update(userReview.id, reviewData);
+        toast.success('Review updated!');
+      } else {
+        await base44.entities.Review.create({
+          ...reviewData,
+          movie_id: movieId,
+          user_email: user.email,
+          user_name: user.full_name
+        });
+        toast.success('Review submitted!');
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['reviews'] });
+    }
+  });
+
+  // Flag review mutation
+  const flagMutation = useMutation({
+    mutationFn: async (review) => {
+      await base44.entities.Review.update(review.id, { is_flagged: true });
+      toast.success('Review flagged for moderation');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['reviews'] });
+    }
+  });
 
   // Video controls
   const togglePlay = () => {
@@ -386,9 +431,12 @@ export default function Player() {
         <div className="grid lg:grid-cols-[1fr_300px] gap-8">
           {/* Main Content */}
           <div>
-            <div className="flex flex-wrap items-start gap-4 mb-6">
-              <h1 className="text-3xl md:text-4xl font-bold">{movie.title}</h1>
-              <div className="flex items-center gap-2">
+            <div className="mb-6">
+              <h1 className="text-3xl md:text-4xl font-bold mb-4">{movie.title}</h1>
+              
+              {/* Average Rating */}
+              <div className="flex flex-wrap items-center gap-4 mb-4">
+                <AverageRating reviews={reviews} />
                 {movie.rating && (
                   <span className="px-3 py-1 bg-white/10 rounded text-sm font-medium">
                     {movie.rating}
@@ -460,9 +508,46 @@ export default function Player() {
           </div>
         </div>
 
+        {/* Reviews Section */}
+        <div className="mt-16 border-t border-white/10 pt-12">
+          <h2 className="text-2xl font-bold mb-8">Reviews</h2>
+          
+          <div className="grid lg:grid-cols-[1fr_400px] gap-8">
+            {/* Reviews List */}
+            <div>
+              <ReviewsList
+                reviews={reviews}
+                currentUserEmail={user?.email}
+                onFlag={(review) => flagMutation.mutate(review)}
+              />
+            </div>
+
+            {/* Review Form */}
+            <div>
+              {user ? (
+                <ReviewForm
+                  onSubmit={(data) => reviewMutation.mutate(data)}
+                  isSubmitting={reviewMutation.isPending}
+                  userReview={userReview}
+                />
+              ) : (
+                <div className="bg-white/5 rounded-xl p-6 border border-white/10 text-center">
+                  <p className="text-white/60 mb-4">Sign in to leave a review</p>
+                  <Button
+                    onClick={() => base44.auth.redirectToLogin()}
+                    className="bg-[#D4AF37] hover:bg-[#E5C158] text-black font-semibold"
+                  >
+                    Sign In
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Recommendations */}
         {recommendations.length > 0 && (
-          <div className="mt-16">
+          <div className="mt-16 border-t border-white/10 pt-12">
             <h2 className="text-2xl font-bold mb-6">Recommended for You</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
               {recommendations.map((m, i) => (

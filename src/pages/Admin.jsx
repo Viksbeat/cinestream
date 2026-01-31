@@ -70,6 +70,7 @@ export default function Admin() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [activeTab, setActiveTab] = useState('movies');
   const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState({
@@ -109,6 +110,15 @@ export default function Admin() {
     queryFn: () => base44.entities.Movie.list('-created_date', 100),
   });
 
+  // Fetch all reviews for moderation
+  const { data: allReviews = [] } = useQuery({
+    queryKey: ['allReviews'],
+    queryFn: () => base44.asServiceRole.entities.Review.list('-created_date', 100),
+  });
+
+  const flaggedReviews = allReviews.filter(r => r.is_flagged);
+  const pendingReviews = allReviews.filter(r => !r.is_approved);
+
   // Create/Update mutation
   const saveMutation = useMutation({
     mutationFn: async (data) => {
@@ -140,6 +150,27 @@ export default function Admin() {
       queryClient.invalidateQueries({ queryKey: ['movies'] });
       setDeleteDialogOpen(false);
       setSelectedMovie(null);
+    }
+  });
+
+  // Review moderation mutations
+  const approveReviewMutation = useMutation({
+    mutationFn: async (reviewId) => {
+      await base44.asServiceRole.entities.Review.update(reviewId, { is_approved: true, is_flagged: false });
+      toast.success('Review approved');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['allReviews'] });
+    }
+  });
+
+  const deleteReviewMutation = useMutation({
+    mutationFn: async (reviewId) => {
+      await base44.asServiceRole.entities.Review.delete(reviewId);
+      toast.success('Review deleted');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['allReviews'] });
     }
   });
 
@@ -260,23 +291,61 @@ export default function Admin() {
           </Link>
           <div>
             <h1 className="text-2xl md:text-3xl font-bold">Admin Panel</h1>
-            <p className="text-white/60">Manage your movie catalog</p>
+            <p className="text-white/60">Manage your movie catalog and reviews</p>
           </div>
         </div>
+        {activeTab === 'movies' && (
+          <Button
+            onClick={() => {
+              resetForm();
+              setIsDialogOpen(true);
+            }}
+            className="bg-[#D4AF37] hover:bg-[#E5C158] text-black font-semibold gap-2"
+          >
+            <Plus className="w-5 h-5" />
+            Add Movie
+          </Button>
+        )}
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-2 mb-8 border-b border-white/10">
         <Button
-          onClick={() => {
-            resetForm();
-            setIsDialogOpen(true);
-          }}
-          className="bg-[#D4AF37] hover:bg-[#E5C158] text-black font-semibold gap-2"
+          variant="ghost"
+          onClick={() => setActiveTab('movies')}
+          className={`rounded-none pb-3 ${
+            activeTab === 'movies' 
+              ? 'border-b-2 border-[#D4AF37] text-[#D4AF37]' 
+              : 'text-white/60'
+          }`}
         >
-          <Plus className="w-5 h-5" />
-          Add Movie
+          <Film className="w-4 h-4 mr-2" />
+          Movies
+        </Button>
+        <Button
+          variant="ghost"
+          onClick={() => setActiveTab('reviews')}
+          className={`rounded-none pb-3 relative ${
+            activeTab === 'reviews' 
+              ? 'border-b-2 border-[#D4AF37] text-[#D4AF37]' 
+              : 'text-white/60'
+          }`}
+        >
+          <Star className="w-4 h-4 mr-2" />
+          Reviews
+          {flaggedReviews.length > 0 && (
+            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs flex items-center justify-center">
+              {flaggedReviews.length}
+            </span>
+          )}
         </Button>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      {/* Content */}
+      {activeTab === 'movies' ? (
+        <>
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="bg-white/5 rounded-xl p-4 border border-white/10">
           <Film className="w-6 h-6 text-[#D4AF37] mb-2" />
           <p className="text-2xl font-bold">{movies.length}</p>
@@ -397,6 +466,163 @@ export default function Admin() {
           </TableBody>
         </Table>
       </div>
+        </>
+      ) : (
+        <>
+          {/* Review Moderation */}
+          <div className="space-y-6">
+            {/* Flagged Reviews */}
+            {flaggedReviews.length > 0 && (
+              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-6">
+                <h2 className="text-xl font-bold text-red-400 mb-4 flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5" />
+                  Flagged Reviews ({flaggedReviews.length})
+                </h2>
+                <div className="space-y-4">
+                  {flaggedReviews.map((review) => {
+                    const movie = movies.find(m => m.id === review.movie_id);
+                    return (
+                      <div key={review.id} className="bg-[#1a1a1a] rounded-lg p-4">
+                        <div className="flex items-start justify-between mb-3">
+                          <div>
+                            <p className="font-medium">{review.user_name}</p>
+                            <p className="text-sm text-white/60">{movie?.title}</p>
+                            <div className="flex gap-0.5 mt-1">
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <Star
+                                  key={star}
+                                  className={`w-3.5 h-3.5 ${
+                                    star <= review.rating
+                                      ? 'text-[#D4AF37] fill-[#D4AF37]'
+                                      : 'text-white/20'
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => approveReviewMutation.mutate(review.id)}
+                              className="border-green-500/50 text-green-500 hover:bg-green-500/10"
+                            >
+                              Approve
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => deleteReviewMutation.mutate(review.id)}
+                              className="border-red-500/50 text-red-500 hover:bg-red-500/10"
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        </div>
+                        {review.review_text && (
+                          <p className="text-white/80 text-sm">{review.review_text}</p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* All Reviews */}
+            <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+              <div className="p-6 border-b border-white/10">
+                <h2 className="text-xl font-bold">All Reviews ({allReviews.length})</h2>
+              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-white/10 hover:bg-transparent">
+                    <TableHead className="text-white/60">User</TableHead>
+                    <TableHead className="text-white/60">Movie</TableHead>
+                    <TableHead className="text-white/60">Rating</TableHead>
+                    <TableHead className="text-white/60 hidden md:table-cell">Review</TableHead>
+                    <TableHead className="text-white/60">Status</TableHead>
+                    <TableHead className="text-white/60 text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {allReviews.map((review) => {
+                    const movie = movies.find(m => m.id === review.movie_id);
+                    return (
+                      <TableRow key={review.id} className="border-white/10 hover:bg-white/5">
+                        <TableCell>
+                          <div>
+                            <p className="font-medium text-sm">{review.user_name}</p>
+                            <p className="text-xs text-white/50">{review.user_email}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <p className="text-sm">{movie?.title || 'Unknown'}</p>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-0.5">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star
+                                key={star}
+                                className={`w-3.5 h-3.5 ${
+                                  star <= review.rating
+                                    ? 'text-[#D4AF37] fill-[#D4AF37]'
+                                    : 'text-white/20'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          <p className="text-sm text-white/60 line-clamp-2 max-w-xs">
+                            {review.review_text || '-'}
+                          </p>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col gap-1">
+                            {review.is_flagged && (
+                              <Badge variant="outline" className="border-red-500/50 text-red-500 text-xs">
+                                Flagged
+                              </Badge>
+                            )}
+                            {!review.is_approved && (
+                              <Badge variant="outline" className="border-yellow-500/50 text-yellow-500 text-xs">
+                                Pending
+                              </Badge>
+                            )}
+                            {review.is_approved && !review.is_flagged && (
+                              <Badge variant="outline" className="border-green-500/50 text-green-500 text-xs">
+                                Approved
+                              </Badge>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => deleteReviewMutation.mutate(review.id)}
+                            className="hover:bg-red-500/20 text-red-400"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                  {allReviews.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center py-12 text-white/60">
+                        No reviews yet
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Add/Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
