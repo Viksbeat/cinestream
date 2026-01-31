@@ -464,7 +464,7 @@ export default function Player() {
                 {movie.release_year && (
                   <span className="text-white/60">{movie.release_year}</span>
                 )}
-                {movie.duration && (
+                {movie.duration && typeof movie.duration === 'string' && (
                   <span className="text-white/60">{movie.duration}</span>
                 )}
               </div>
