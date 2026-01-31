@@ -256,7 +256,7 @@ export default function Player() {
   const recommendations = movie ? getRecommendations({
     allMovies,
     currentMovie: movie,
-    watchHistory: history,
+    watchHistory: watchHistory,
     userReviews: reviews.filter(r => r.user_email === user?.email),
     userList,
     limit: 12
