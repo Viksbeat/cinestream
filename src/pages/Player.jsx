@@ -234,20 +234,37 @@ export default function Player() {
         ref={containerRef}
         className="relative bg-black aspect-video max-h-[70vh] mx-auto cursor-pointer"
         onMouseMove={handleMouseMove}
-        onClick={togglePlay}
       >
         {movie.video_url ? (
-          <video
-            ref={videoRef}
-            src={movie.video_url}
-            className="w-full h-full object-contain"
-            onTimeUpdate={handleTimeUpdate}
-            onLoadedMetadata={handleLoadedMetadata}
-            onEnded={() => {
-              setIsPlaying(false);
-              historyMutation.mutate({ completed: true, last_watched: new Date().toISOString() });
-            }}
-          />
+          // Check if it's a Bunny.net embed URL
+          movie.video_url.includes('iframe.mediadelivery.net') || movie.video_url.includes('bunnycdn.com') ? (
+            <iframe
+              src={movie.video_url}
+              className="w-full h-full"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+              allowFullScreen
+              onLoad={() => {
+                // Track that video was loaded
+                historyMutation.mutate({
+                  progress: 0,
+                  last_watched: new Date().toISOString()
+                });
+              }}
+            />
+          ) : (
+            <video
+              ref={videoRef}
+              src={movie.video_url}
+              className="w-full h-full object-contain"
+              onTimeUpdate={handleTimeUpdate}
+              onLoadedMetadata={handleLoadedMetadata}
+              onClick={togglePlay}
+              onEnded={() => {
+                setIsPlaying(false);
+                historyMutation.mutate({ completed: true, last_watched: new Date().toISOString() });
+              }}
+            />
+          )
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1a1a1a] to-black">
             <div className="text-center">
@@ -261,9 +278,9 @@ export default function Player() {
           </div>
         )}
 
-        {/* Controls Overlay */}
+        {/* Controls Overlay - Only show for non-iframe videos */}
         <AnimatePresence>
-          {showControls && (
+          {showControls && !movie.video_url?.includes('iframe.mediadelivery.net') && !movie.video_url?.includes('bunnycdn.com') && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
