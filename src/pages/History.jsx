@@ -152,7 +152,7 @@ function HistoryItem({ item, index, onRemove }) {
     : 0;
 
   function parseDuration(duration) {
-    if (!duration) return 0;
+    if (!duration || typeof duration !== 'string') return 0;
     const match = duration.match(/(\d+)h\s*(\d+)?m?/);
     if (match) {
       const hours = parseInt(match[1]) || 0;
