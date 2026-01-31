@@ -15,7 +15,7 @@ import { toast } from 'sonner';
 import AverageRating from '../components/reviews/AverageRating';
 import ReviewForm from '../components/reviews/ReviewForm';
 import ReviewsList from '../components/reviews/ReviewsList';
-import { getRecommendations } from '../utils/recommendations';
+import { getRecommendations } from '../components/utils/recommendations';
 
 export default function Player() {
   const [user, setUser] = useState(null);
@@ -76,6 +76,13 @@ export default function Player() {
 
   // Get user's review
   const userReview = reviews.find(r => r.user_email === user?.email);
+
+  // Fetch watch history for recommendations
+  const { data: watchHistory = [] } = useQuery({
+    queryKey: ['watchHistory', user?.email],
+    queryFn: () => base44.entities.WatchHistory.filter({ user_email: user.email }, '-last_watched', 100),
+    enabled: !!user?.email,
+  });
 
   // Watch history mutation
   const historyMutation = useMutation({
