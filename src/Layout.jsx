@@ -101,8 +101,8 @@ export default function Layout({ children, currentPageName }) {
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697deede265d9acdbc187371/40d460b69_Gemini_Generated_Image_hnzha4hnzha4hnzh.png"
                 alt="VIBEFLIX"
-                className="h-12 md:h-16 w-auto brightness-110"
-                style={{ mixBlendMode: 'screen' }}
+                className="h-12 md:h-16 w-auto"
+                style={{ mixBlendMode: 'lighten', filter: 'brightness(1.2) contrast(1.5)' }}
               />
             </Link>
 
@@ -262,8 +262,8 @@ export default function Layout({ children, currentPageName }) {
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697deede265d9acdbc187371/40d460b69_Gemini_Generated_Image_hnzha4hnzha4hnzh.png"
                 alt="VIBEFLIX"
-                className="h-8 w-auto brightness-110"
-                style={{ mixBlendMode: 'screen' }}
+                className="h-8 w-auto"
+                style={{ mixBlendMode: 'lighten', filter: 'brightness(1.2) contrast(1.5)' }}
               />
             </div>
             <div className="flex items-center gap-6 text-sm text-white/50">
