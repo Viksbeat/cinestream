@@ -295,8 +295,11 @@ export default function Player() {
         style={{ position: 'relative' }}
       >
         {movie.video_url ? (
-          // Check if it's a Bunny.net embed URL
-          movie.video_url.includes('iframe.mediadelivery.net') || movie.video_url.includes('bunnycdn.com') || movie.video_url.includes('b-cdn.net') ? (
+          // Check if it's a Bunny.net embed URL or iframe URL
+          movie.video_url.includes('iframe') || movie.video_url.includes('embed') || 
+          movie.video_url.includes('player.mediadelivery.net') || 
+          movie.video_url.includes('bunnycdn.com') || 
+          movie.video_url.includes('b-cdn.net') ? (
             <iframe
               src={movie.video_url}
               className="w-full h-full"
@@ -316,18 +319,34 @@ export default function Player() {
               }}
             />
           ) : (
-            <video
-              ref={videoRef}
-              src={movie.video_url}
-              className="w-full h-full object-contain"
-              onTimeUpdate={handleTimeUpdate}
-              onLoadedMetadata={handleLoadedMetadata}
-              onClick={togglePlay}
-              onEnded={() => {
-                setIsPlaying(false);
-                historyMutation.mutate({ completed: true, last_watched: new Date().toISOString() });
-              }}
-            />
+            movie.video_url.endsWith('.mp4') || 
+            movie.video_url.endsWith('.webm') || 
+            movie.video_url.endsWith('.ogg') ? (
+              <video
+                ref={videoRef}
+                src={movie.video_url}
+                className="w-full h-full object-contain"
+                onTimeUpdate={handleTimeUpdate}
+                onLoadedMetadata={handleLoadedMetadata}
+                onClick={togglePlay}
+                onEnded={() => {
+                  setIsPlaying(false);
+                  historyMutation.mutate({ completed: true, last_watched: new Date().toISOString() });
+                }}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1a1a1a] to-black">
+                <div className="text-center">
+                  <img
+                    src={movie.poster_url}
+                    alt={movie.title}
+                    className="w-48 h-72 object-cover mx-auto rounded-lg mb-4 opacity-50"
+                  />
+                  <p className="text-white/60 mb-2">Video format not supported</p>
+                  <p className="text-white/40 text-sm">Use Bunny.net iframe embed URLs or direct video files (.mp4, .webm)</p>
+                </div>
+              </div>
+            )
           )
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1a1a1a] to-black">
