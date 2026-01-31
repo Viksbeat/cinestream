@@ -102,7 +102,7 @@ export default function Layout({ children, currentPageName }) {
                 <Film className="w-5 h-5 md:w-6 md:h-6 text-black" />
               </div>
               <span className="text-xl md:text-2xl font-bold tracking-tight">
-                <span className="text-[#D4AF37]">AFRI</span>LIX
+                <span className="text-[#D4AF37]">VIBE</span>FLIX
               </span>
             </Link>
 
@@ -263,11 +263,11 @@ export default function Layout({ children, currentPageName }) {
                 <Film className="w-4 h-4 text-black" />
               </div>
               <span className="font-bold">
-                <span className="text-[#D4AF37]">AFRI</span>LIX
+                <span className="text-[#D4AF37]">VIBE</span>FLIX
               </span>
             </div>
             <div className="flex items-center gap-6 text-sm text-white/50">
-              <span>© 2024 Afrilix. All rights reserved.</span>
+              <span>© 2026 Vibeflix. All rights reserved.</span>
             </div>
           </div>
         </div>
