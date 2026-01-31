@@ -15,7 +15,7 @@ import { toast } from 'sonner';
 import AverageRating from '../components/reviews/AverageRating';
 import ReviewForm from '../components/reviews/ReviewForm';
 import ReviewsList from '../components/reviews/ReviewsList';
-import { getRecommendations } from '../components/utils/recommendations';
+import { getRecommendations } from '@/components/utils/recommendations';
 
 export default function Player() {
   const [user, setUser] = useState(null);
