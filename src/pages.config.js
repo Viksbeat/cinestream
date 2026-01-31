@@ -49,12 +49,22 @@
  */
 import Home from './pages/Home';
 import Player from './pages/Player';
+import Search from './pages/Search';
+import Browse from './pages/Browse';
+import MyList from './pages/MyList';
+import History from './pages/History';
+import Admin from './pages/Admin';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Home": Home,
     "Player": Player,
+    "Search": Search,
+    "Browse": Browse,
+    "MyList": MyList,
+    "History": History,
+    "Admin": Admin,
 }
 
 export const pagesConfig = {
