@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import HeroSection from '../components/movies/HeroSection';
 import MovieRow from '../components/movies/MovieRow';
+import ContinueWatchingRow from '../components/movies/ContinueWatchingRow';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -32,6 +33,13 @@ export default function Home() {
   const { data: userList = [] } = useQuery({
     queryKey: ['userList', user?.email],
     queryFn: () => base44.entities.UserList.filter({ user_email: user.email }),
+    enabled: !!user?.email,
+  });
+
+  // Fetch watch history for continue watching
+  const { data: watchHistory = [] } = useQuery({
+    queryKey: ['watchHistory', user?.email],
+    queryFn: () => base44.entities.WatchHistory.filter({ user_email: user.email }, '-last_watched', 20),
     enabled: !!user?.email,
   });
 
@@ -66,10 +74,10 @@ export default function Home() {
 
   // Organize movies by category
   const featuredMovie = movies.find(m => m.is_featured) || movies[0];
-  const newReleases = movies.filter(m => m.category === 'new_releases');
-  const trending = movies.filter(m => m.category === 'trending');
-  const popular = movies.filter(m => m.category === 'popular');
-  const classics = movies.filter(m => m.category === 'classics');
+  const newReleases = movies.filter(m => m.category === 'new_releases').slice(0, 15);
+  const trending = movies.filter(m => m.category === 'trending').slice(0, 15);
+  const popular = movies.filter(m => m.category === 'popular').slice(0, 15);
+  const classics = movies.filter(m => m.category === 'classics').slice(0, 15);
   
   // Group by genre
   const actionMovies = movies.filter(m => m.genre?.includes('Action'));
@@ -100,6 +108,16 @@ export default function Home() {
 
       {/* Movie Rows */}
       <div className="-mt-32 relative z-10 space-y-8 pb-12">
+        {/* Continue Watching */}
+        {user && (
+          <ContinueWatchingRow
+            watchHistory={watchHistory}
+            movies={movies}
+            onAddToList={handleAddToList}
+            userList={userList}
+          />
+        )}
+
         {newReleases.length > 0 && (
           <MovieRow
             title="New Releases"
@@ -120,7 +138,7 @@ export default function Home() {
 
         {popular.length > 0 && (
           <MovieRow
-            title="Popular on Afrilix"
+            title="Popular on Vibeflix"
             movies={popular}
             userList={userList}
             onAddToList={handleAddToList}
