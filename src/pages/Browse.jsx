@@ -252,7 +252,7 @@ function ListItem({ movie, isInList, onAddToList, index }) {
         <h3 className="font-semibold text-lg line-clamp-1">{movie.title}</h3>
         <div className="flex items-center gap-2 text-sm text-white/60 mt-1">
           {movie.release_year && <span>{movie.release_year}</span>}
-          {movie.duration && (
+          {movie.duration && typeof movie.duration === 'string' && (
             <>
               <span>•</span>
               <span>{movie.duration}</span>
