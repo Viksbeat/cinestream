@@ -363,7 +363,7 @@ export default function Player() {
 
         {/* Controls Overlay - Only show for non-iframe videos */}
         <AnimatePresence>
-          {showControls && !movie.video_url?.includes('iframe.mediadelivery.net') && !movie.video_url?.includes('bunnycdn.com') && (
+          {showControls && !(movie.video_url?.includes('iframe') || movie.video_url?.includes('embed') || movie.video_url?.includes('player.mediadelivery.net')) && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
