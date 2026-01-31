@@ -296,10 +296,12 @@ export default function Player() {
       >
         {movie.video_url ? (
           // Check if it's a Bunny.net embed URL or iframe URL
-          movie.video_url.includes('iframe') || movie.video_url.includes('embed') || 
-          movie.video_url.includes('player.mediadelivery.net') || 
-          movie.video_url.includes('bunnycdn.com') || 
-          movie.video_url.includes('b-cdn.net') ? (
+          (movie.video_url.includes('iframe') || 
+           movie.video_url.includes('embed') || 
+           movie.video_url.includes('player.mediadelivery.net') || 
+           movie.video_url.includes('iframe.mediadelivery.net') ||
+           movie.video_url.includes('bunnycdn.com') || 
+           movie.video_url.includes('b-cdn.net')) ? (
             <iframe
               src={movie.video_url}
               className="w-full h-full"
