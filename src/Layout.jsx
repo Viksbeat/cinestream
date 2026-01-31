@@ -97,13 +97,12 @@ export default function Layout({ children, currentPageName }) {
         <div className="max-w-[1800px] mx-auto px-4 md:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-              <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-[#D4AF37] to-[#B8860B] rounded-lg flex items-center justify-center">
-                <Film className="w-5 h-5 md:w-6 md:h-6 text-black" />
-              </div>
-              <span className="text-xl md:text-2xl font-bold tracking-tight">
-                <span className="text-[#D4AF37]">VIBE</span>FLIX
-              </span>
+            <Link to={createPageUrl('Home')} className="flex items-center gap-3">
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697deede265d9acdbc187371/40d460b69_Gemini_Generated_Image_hnzha4hnzha4hnzh.png"
+                alt="VIBEFLIX"
+                className="h-8 md:h-10 w-auto"
+              />
             </Link>
 
             {/* Desktop Nav */}
@@ -259,12 +258,11 @@ export default function Layout({ children, currentPageName }) {
         <div className="max-w-[1800px] mx-auto px-4 md:px-8 py-12">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#D4AF37] to-[#B8860B] rounded flex items-center justify-center">
-                <Film className="w-4 h-4 text-black" />
-              </div>
-              <span className="font-bold">
-                <span className="text-[#D4AF37]">VIBE</span>FLIX
-              </span>
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697deede265d9acdbc187371/40d460b69_Gemini_Generated_Image_hnzha4hnzha4hnzh.png"
+                alt="VIBEFLIX"
+                className="h-6 w-auto"
+              />
             </div>
             <div className="flex items-center gap-6 text-sm text-white/50">
               <span>© 2026 Vibeflix. All rights reserved.</span>
