@@ -5,7 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   Loader2, Plus, Pencil, Trash2, Film, Upload, 
-  ArrowLeft, Save, X, Image, Video, Star
+  ArrowLeft, Save, X, Image, Video, Star, Users, AlertCircle
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -118,6 +118,12 @@ export default function Admin() {
 
   const flaggedReviews = allReviews.filter(r => r.is_flagged);
   const pendingReviews = allReviews.filter(r => !r.is_approved);
+
+  // Fetch all users
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['allUsers'],
+    queryFn: () => base44.asServiceRole.entities.User.list('-created_date', 100),
+  });
 
   // Create/Update mutation
   const saveMutation = useMutation({
@@ -339,10 +345,79 @@ export default function Admin() {
             </span>
           )}
         </Button>
+        <Button
+          variant="ghost"
+          onClick={() => setActiveTab('users')}
+          className={`rounded-none pb-3 ${
+            activeTab === 'users' 
+              ? 'border-b-2 border-[#D4AF37] text-[#D4AF37]' 
+              : 'text-white/60'
+          }`}
+        >
+          <Users className="w-4 h-4 mr-2" />
+          Users
+        </Button>
       </div>
 
       {/* Content */}
-      {activeTab === 'movies' ? (
+      {activeTab === 'users' ? (
+        <>
+          {/* Users Table */}
+          <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+            <div className="p-6 border-b border-white/10">
+              <h2 className="text-xl font-bold">All Users ({allUsers.length})</h2>
+            </div>
+            <Table>
+              <TableHeader>
+                <TableRow className="border-white/10 hover:bg-transparent">
+                  <TableHead className="text-white/60">User</TableHead>
+                  <TableHead className="text-white/60 hidden md:table-cell">Role</TableHead>
+                  <TableHead className="text-white/60 hidden lg:table-cell">Favorite Genres</TableHead>
+                  <TableHead className="text-white/60 hidden lg:table-cell">Joined</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {allUsers.map((u) => (
+                  <TableRow key={u.id} className="border-white/10 hover:bg-white/5">
+                    <TableCell>
+                      <div>
+                        <p className="font-medium">{u.full_name}</p>
+                        <p className="text-sm text-white/50">{u.email}</p>
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <Badge variant={u.role === 'admin' ? 'default' : 'outline'} 
+                        className={u.role === 'admin' ? 'bg-[#D4AF37] text-black' : 'border-white/30'}>
+                        {u.role === 'admin' ? 'Admin' : 'User'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell">
+                      <div className="flex flex-wrap gap-1">
+                        {u.favorite_genre?.slice(0, 3).map((g, i) => (
+                          <Badge key={i} variant="secondary" className="bg-white/10 text-white text-xs">
+                            {g}
+                          </Badge>
+                        ))}
+                        {u.favorite_genre?.length > 3 && (
+                          <Badge variant="secondary" className="bg-white/10 text-white text-xs">
+                            +{u.favorite_genre.length - 3}
+                          </Badge>
+                        )}
+                        {!u.favorite_genre?.length && (
+                          <span className="text-white/40 text-sm">Not set</span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell text-white/60 text-sm">
+                      {new Date(u.created_date).toLocaleDateString()}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </>
+      ) : activeTab === 'movies' ? (
         <>
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
