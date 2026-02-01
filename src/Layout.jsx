@@ -159,6 +159,11 @@ export default function Layout({ children, currentPageName }) {
                       <p className="text-sm text-white/50">{user.email}</p>
                     </div>
                     <DropdownMenuItem asChild className="focus:bg-white/10 cursor-pointer">
+                      <Link to={createPageUrl('Profile')}>
+                        <User className="w-4 h-4 mr-2" /> Profile
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="focus:bg-white/10 cursor-pointer">
                       <Link to={createPageUrl('MyList')}>
                         <Bookmark className="w-4 h-4 mr-2" /> My List
                       </Link>

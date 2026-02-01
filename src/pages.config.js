@@ -54,6 +54,7 @@ import Home from './pages/Home';
 import MyList from './pages/MyList';
 import Player from './pages/Player';
 import Search from './pages/Search';
+import Profile from './pages/Profile';
 import __Layout from './Layout.jsx';
 
 
@@ -65,6 +66,7 @@ export const PAGES = {
     "MyList": MyList,
     "Player": Player,
     "Search": Search,
+    "Profile": Profile,
 }
 
 export const pagesConfig = {
