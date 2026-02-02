@@ -53,8 +53,8 @@ import History from './pages/History';
 import Home from './pages/Home';
 import MyList from './pages/MyList';
 import Player from './pages/Player';
-import Search from './pages/Search';
 import Profile from './pages/Profile';
+import Search from './pages/Search';
 import __Layout from './Layout.jsx';
 
 
@@ -65,8 +65,8 @@ export const PAGES = {
     "Home": Home,
     "MyList": MyList,
     "Player": Player,
-    "Search": Search,
     "Profile": Profile,
+    "Search": Search,
 }
 
 export const pagesConfig = {

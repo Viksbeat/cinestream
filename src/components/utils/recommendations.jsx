@@ -2,7 +2,8 @@
  * Calculate personalized movie recommendations based on:
  * - User's watch history
  * - User's ratings/reviews
- * - Genre preferences
+ * - User's explicitly stated favorite genres
+ * - Genre preferences from behavior
  * - Similar movies to current one
  */
 export function getRecommendations({
@@ -11,6 +12,7 @@ export function getRecommendations({
   watchHistory = [],
   userReviews = [],
   userList = [],
+  userFavoriteGenres = [],
   limit = 10
 }) {
   if (!currentMovie || !allMovies || allMovies.length === 0) {
@@ -22,6 +24,11 @@ export function getRecommendations({
   
   // Calculate user's genre preferences from history and ratings
   const genreScores = {};
+  
+  // HIGHEST PRIORITY: User's explicitly stated favorite genres (50% weight boost)
+  userFavoriteGenres.forEach(genre => {
+    genreScores[genre] = (genreScores[genre] || 0) + 10;
+  });
   
   // Add points for watched movies
   watchHistory.forEach(history => {

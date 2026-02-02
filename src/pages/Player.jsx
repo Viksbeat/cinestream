@@ -16,6 +16,7 @@ import AverageRating from '../components/reviews/AverageRating';
 import ReviewForm from '../components/reviews/ReviewForm';
 import ReviewsList from '../components/reviews/ReviewsList';
 import { getRecommendations } from '@/components/utils/recommendations';
+import { getUsersAlsoWatched } from '@/components/utils/collaborativeFiltering';
 
 export default function Player() {
   const [user, setUser] = useState(null);
@@ -82,6 +83,13 @@ export default function Player() {
     queryKey: ['watchHistory', user?.email],
     queryFn: () => base44.entities.WatchHistory.filter({ user_email: user.email }, '-last_watched', 100),
     enabled: !!user?.email,
+  });
+
+  // Fetch ALL watch history for collaborative filtering
+  const { data: allWatchHistory = [] } = useQuery({
+    queryKey: ['allWatchHistory'],
+    queryFn: () => base44.asServiceRole.entities.WatchHistory.list('-last_watched', 500),
+    enabled: !!movieId,
   });
 
   // Watch history mutation
@@ -259,6 +267,16 @@ export default function Player() {
     watchHistory: watchHistory,
     userReviews: reviews.filter(r => r.user_email === user?.email),
     userList,
+    userFavoriteGenres: user?.favorite_genre || [],
+    limit: 12
+  }) : [];
+
+  // Get collaborative filtering recommendations
+  const alsoWatched = movie ? getUsersAlsoWatched({
+    currentMovieId: movieId,
+    allMovies,
+    allWatchHistory,
+    currentUserEmail: user?.email,
     limit: 12
   }) : [];
 
@@ -585,7 +603,25 @@ export default function Player() {
           </div>
         </div>
 
-        {/* Recommendations */}
+        {/* Users Also Watched */}
+        {alsoWatched.length > 0 && (
+          <div className="mt-16 border-t border-white/10 pt-12">
+            <h2 className="text-2xl font-bold mb-6">Viewers Also Watched</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+              {alsoWatched.map((m, i) => (
+                <MovieCard
+                  key={m.id}
+                  movie={m}
+                  index={i}
+                  isInList={userList.some(item => item.movie_id === m.id)}
+                  onAddToList={handleAddToList}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Personalized Recommendations */}
         {recommendations.length > 0 && (
           <div className="mt-16 border-t border-white/10 pt-12">
             <h2 className="text-2xl font-bold mb-6">Recommended for You</h2>
