@@ -5,7 +5,8 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   Loader2, Plus, Pencil, Trash2, Film, Upload, 
-  ArrowLeft, Save, X, Image, Video, Star, Users, AlertCircle
+  ArrowLeft, Save, X, Image, Video, Star, Users, AlertCircle,
+  TrendingUp, Eye, BarChart3, Crown
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,6 +72,9 @@ export default function Admin() {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [activeTab, setActiveTab] = useState('movies');
+  const [userToEdit, setUserToEdit] = useState(null);
+  const [userEditDialogOpen, setUserEditDialogOpen] = useState(false);
+  const [userDeleteDialogOpen, setUserDeleteDialogOpen] = useState(null);
   const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState({
@@ -125,6 +129,18 @@ export default function Admin() {
     queryFn: () => base44.asServiceRole.entities.User.list('-created_date', 100),
   });
 
+  // Fetch all watch history for analytics
+  const { data: allWatchHistory = [] } = useQuery({
+    queryKey: ['allWatchHistory'],
+    queryFn: () => base44.asServiceRole.entities.WatchHistory.list('-last_watched', 1000),
+  });
+
+  // Fetch all reviews for analytics
+  const { data: allReviewsForAnalytics = [] } = useQuery({
+    queryKey: ['allReviewsAnalytics'],
+    queryFn: () => base44.asServiceRole.entities.Review.list('-created_date', 1000),
+  });
+
   // Create/Update mutation
   const saveMutation = useMutation({
     mutationFn: async (data) => {
@@ -177,6 +193,30 @@ export default function Admin() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['allReviews'] });
+    }
+  });
+
+  // User management mutations
+  const updateUserMutation = useMutation({
+    mutationFn: async ({ userId, role }) => {
+      await base44.asServiceRole.entities.User.update(userId, { role });
+      toast.success('User role updated');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['allUsers'] });
+      setUserEditDialogOpen(false);
+      setUserToEdit(null);
+    }
+  });
+
+  const deleteUserMutation = useMutation({
+    mutationFn: async (userId) => {
+      await base44.asServiceRole.entities.User.delete(userId);
+      toast.success('User deleted');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['allUsers'] });
+      setUserDeleteDialogOpen(null);
     }
   });
 
@@ -297,7 +337,7 @@ export default function Admin() {
           </Link>
           <div>
             <h1 className="text-2xl md:text-3xl font-bold">Admin Panel</h1>
-            <p className="text-white/60">Manage your movie catalog and reviews</p>
+            <p className="text-white/60">Manage movies, users, and analytics</p>
           </div>
         </div>
         {activeTab === 'movies' && (
@@ -357,10 +397,145 @@ export default function Admin() {
           <Users className="w-4 h-4 mr-2" />
           Users
         </Button>
+        <Button
+          variant="ghost"
+          onClick={() => setActiveTab('analytics')}
+          className={`rounded-none pb-3 ${
+            activeTab === 'analytics' 
+              ? 'border-b-2 border-[#D4AF37] text-[#D4AF37]' 
+              : 'text-white/60'
+          }`}
+        >
+          <BarChart3 className="w-4 h-4 mr-2" />
+          Analytics
+        </Button>
       </div>
 
       {/* Content */}
-      {activeTab === 'users' ? (
+      {activeTab === 'analytics' ? (
+        <>
+          {/* Analytics Dashboard */}
+          <div className="space-y-8">
+            {/* Top Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                <Eye className="w-6 h-6 text-[#D4AF37] mb-2" />
+                <p className="text-2xl font-bold">{allWatchHistory.length}</p>
+                <p className="text-sm text-white/60">Total Views</p>
+              </div>
+              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                <Users className="w-6 h-6 text-[#D4AF37] mb-2" />
+                <p className="text-2xl font-bold">{allUsers.length}</p>
+                <p className="text-sm text-white/60">Total Users</p>
+              </div>
+              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                <Star className="w-6 h-6 text-[#D4AF37] mb-2" />
+                <p className="text-2xl font-bold">{allReviewsForAnalytics.length}</p>
+                <p className="text-sm text-white/60">Total Reviews</p>
+              </div>
+              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                <Film className="w-6 h-6 text-[#D4AF37] mb-2" />
+                <p className="text-2xl font-bold">{movies.length}</p>
+                <p className="text-sm text-white/60">Total Movies</p>
+              </div>
+            </div>
+
+            {/* Most Watched Movies */}
+            <div className="bg-white/5 rounded-xl border border-white/10 p-6">
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-[#D4AF37]" />
+                Most Watched Movies
+              </h2>
+              <div className="space-y-3">
+                {(() => {
+                  const watchCounts = {};
+                  allWatchHistory.forEach(h => {
+                    watchCounts[h.movie_id] = (watchCounts[h.movie_id] || 0) + 1;
+                  });
+                  const sorted = Object.entries(watchCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 10);
+                  
+                  return sorted.map(([movieId, count], idx) => {
+                    const movie = movies.find(m => m.id === movieId);
+                    if (!movie) return null;
+                    return (
+                      <div key={movieId} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl font-bold text-white/40 w-8">#{idx + 1}</span>
+                          {movie.poster_url && (
+                            <img src={movie.poster_url} alt={movie.title} className="w-10 h-14 object-cover rounded" />
+                          )}
+                          <div>
+                            <p className="font-medium">{movie.title}</p>
+                            <p className="text-sm text-white/50">{movie.genre?.slice(0, 2).join(', ')}</p>
+                          </div>
+                        </div>
+                        <Badge className="bg-[#D4AF37] text-black">
+                          {count} views
+                        </Badge>
+                      </div>
+                    );
+                  });
+                })()}
+              </div>
+            </div>
+
+            {/* Highest Rated Movies */}
+            <div className="bg-white/5 rounded-xl border border-white/10 p-6">
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                <Crown className="w-5 h-5 text-[#D4AF37]" />
+                Highest Rated Movies
+              </h2>
+              <div className="space-y-3">
+                {(() => {
+                  const movieRatings = {};
+                  allReviewsForAnalytics.forEach(r => {
+                    if (!movieRatings[r.movie_id]) {
+                      movieRatings[r.movie_id] = { sum: 0, count: 0 };
+                    }
+                    movieRatings[r.movie_id].sum += r.rating;
+                    movieRatings[r.movie_id].count += 1;
+                  });
+                  
+                  const sorted = Object.entries(movieRatings)
+                    .map(([movieId, data]) => ({
+                      movieId,
+                      avg: data.sum / data.count,
+                      count: data.count
+                    }))
+                    .filter(item => item.count >= 3) // At least 3 reviews
+                    .sort((a, b) => b.avg - a.avg)
+                    .slice(0, 10);
+                  
+                  return sorted.map((item, idx) => {
+                    const movie = movies.find(m => m.id === item.movieId);
+                    if (!movie) return null;
+                    return (
+                      <div key={item.movieId} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl font-bold text-white/40 w-8">#{idx + 1}</span>
+                          {movie.poster_url && (
+                            <img src={movie.poster_url} alt={movie.title} className="w-10 h-14 object-cover rounded" />
+                          )}
+                          <div>
+                            <p className="font-medium">{movie.title}</p>
+                            <p className="text-sm text-white/50">{item.count} reviews</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Star className="w-4 h-4 text-[#D4AF37] fill-[#D4AF37]" />
+                          <span className="text-lg font-bold">{item.avg.toFixed(1)}</span>
+                        </div>
+                      </div>
+                    );
+                  });
+                })()}
+              </div>
+            </div>
+          </div>
+        </>
+      ) : activeTab === 'users' ? (
         <>
           {/* Users Table */}
           <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
@@ -374,6 +549,7 @@ export default function Admin() {
                   <TableHead className="text-white/60 hidden md:table-cell">Role</TableHead>
                   <TableHead className="text-white/60 hidden lg:table-cell">Favorite Genres</TableHead>
                   <TableHead className="text-white/60 hidden lg:table-cell">Joined</TableHead>
+                  <TableHead className="text-white/60 text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -410,6 +586,31 @@ export default function Admin() {
                     </TableCell>
                     <TableCell className="hidden lg:table-cell text-white/60 text-sm">
                       {new Date(u.created_date).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setUserToEdit(u);
+                            setUserEditDialogOpen(true);
+                          }}
+                          className="hover:bg-white/10"
+                          disabled={u.email === user.email}
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setUserDeleteDialogOpen(u)}
+                          className="hover:bg-red-500/20 text-red-400"
+                          disabled={u.email === user.email}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -981,7 +1182,7 @@ export default function Admin() {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation */}
+      {/* Delete Movie Confirmation */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent className="bg-[#141414] border-white/10 text-white">
           <AlertDialogHeader>
@@ -998,6 +1199,76 @@ export default function Admin() {
             >
               {deleteMutation.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
               Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Edit User Role Dialog */}
+      <Dialog open={userEditDialogOpen} onOpenChange={setUserEditDialogOpen}>
+        <DialogContent className="bg-[#141414] border-white/10 text-white">
+          <DialogHeader>
+            <DialogTitle>Edit User Role</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm text-white/60 mb-1">User</p>
+              <p className="font-medium">{userToEdit?.full_name}</p>
+              <p className="text-sm text-white/50">{userToEdit?.email}</p>
+            </div>
+            <div className="space-y-2">
+              <Label>Role</Label>
+              <Select
+                value={userToEdit?.role}
+                onValueChange={(value) => setUserToEdit({ ...userToEdit, role: value })}
+              >
+                <SelectTrigger className="bg-white/5 border-white/10">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1a1a1a] border-white/10">
+                  <SelectItem value="user">User</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex justify-end gap-3 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setUserEditDialogOpen(false)}
+                className="border-white/20"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => updateUserMutation.mutate({ userId: userToEdit.id, role: userToEdit.role })}
+                disabled={updateUserMutation.isPending}
+                className="bg-[#D4AF37] hover:bg-[#E5C158] text-black"
+              >
+                {updateUserMutation.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                Save Changes
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete User Confirmation */}
+      <AlertDialog open={!!userDeleteDialogOpen} onOpenChange={() => setUserDeleteDialogOpen(null)}>
+        <AlertDialogContent className="bg-[#141414] border-white/10 text-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete User</AlertDialogTitle>
+            <AlertDialogDescription className="text-white/60">
+              Are you sure you want to delete "{userDeleteDialogOpen?.full_name}"? This will remove all their data including reviews and watch history. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-white/20 hover:bg-white/10">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => deleteUserMutation.mutate(userDeleteDialogOpen?.id)}
+              className="bg-red-500 hover:bg-red-600"
+            >
+              {deleteUserMutation.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+              Delete User
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
