@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { Play, Plus, Check, Star, Film } from 'lucide-react';
 import { motion } from 'framer-motion';
