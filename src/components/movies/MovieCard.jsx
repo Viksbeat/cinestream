@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { Play, Plus, Check, Star } from 'lucide-react';
+import { Play, Plus, Check, Star, Film } from 'lucide-react';
 import { motion } from 'framer-motion';
+import TrailerModal from './TrailerModal';
 
 export default function MovieCard({ movie, onAddToList, isInList, index = 0 }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [showTrailer, setShowTrailer] = useState(false);
 
   return (
     <motion.div
@@ -69,21 +71,38 @@ export default function MovieCard({ movie, onAddToList, isInList, index = 0 }) {
             </div>
           )}
 
-          {/* Add to List Button */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onAddToList?.(movie);
-            }}
-            className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-              isInList 
-                ? 'bg-[#D4AF37] text-black' 
-                : 'bg-black/60 backdrop-blur text-white hover:bg-[#D4AF37] hover:text-black'
-            } ${isHovered ? 'opacity-100' : 'opacity-0'}`}
-          >
-            {isInList ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-          </button>
+          {/* Action Buttons */}
+          <div className={`absolute top-3 right-3 flex gap-2 transition-all duration-300 ${
+            isHovered ? 'opacity-100' : 'opacity-0'
+          }`}>
+            {movie.trailer_url && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowTrailer(true);
+                }}
+                className="w-8 h-8 rounded-full flex items-center justify-center bg-black/60 backdrop-blur text-white hover:bg-[#D4AF37] hover:text-black transition-colors"
+                title="Watch Trailer"
+              >
+                <Film className="w-4 h-4" />
+              </button>
+            )}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onAddToList?.(movie);
+              }}
+              className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+                isInList 
+                  ? 'bg-[#D4AF37] text-black' 
+                  : 'bg-black/60 backdrop-blur text-white hover:bg-[#D4AF37] hover:text-black'
+              }`}
+            >
+              {isInList ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+            </button>
+          </div>
         </div>
       </Link>
 
@@ -98,6 +117,12 @@ export default function MovieCard({ movie, onAddToList, isInList, index = 0 }) {
           </p>
         )}
       </div>
+
+      <TrailerModal
+        isOpen={showTrailer}
+        onClose={() => setShowTrailer(false)}
+        movie={movie}
+      />
     </motion.div>
   );
 }

@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { Play, Plus, Info, Star } from 'lucide-react';
+import { Play, Plus, Info, Star, Film } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion';
+import TrailerModal from './TrailerModal';
 
 export default function HeroSection({ movie, onAddToList, isInList }) {
+  const [showTrailer, setShowTrailer] = useState(false);
+  
   if (!movie) return null;
 
   return (
@@ -99,6 +102,17 @@ export default function HeroSection({ movie, onAddToList, isInList }) {
                   Watch Now
                 </Button>
               </Link>
+              {movie.trailer_url && (
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={() => setShowTrailer(true)}
+                  className="border-white/30 hover:bg-white/10 px-6 py-6 rounded-full gap-2"
+                >
+                  <Film className="w-5 h-5" />
+                  Watch Trailer
+                </Button>
+              )}
               <Button
                 size="lg"
                 variant="outline"
@@ -124,6 +138,12 @@ export default function HeroSection({ movie, onAddToList, isInList }) {
           </motion.div>
         </div>
       </div>
+
+      <TrailerModal
+        isOpen={showTrailer}
+        onClose={() => setShowTrailer(false)}
+        movie={movie}
+      />
     </div>
   );
 }
