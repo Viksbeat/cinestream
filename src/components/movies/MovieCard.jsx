@@ -9,6 +9,14 @@ export default function MovieCard({ movie, onAddToList, isInList, index = 0 }) {
   const [isHovered, setIsHovered] = useState(false);
   const [showTrailer, setShowTrailer] = useState(false);
 
+  const handleCardClick = (e) => {
+    // Only navigate if clicking on the card itself, not buttons
+    if (e.target.closest('button')) {
+      return;
+    }
+    window.location.href = createPageUrl('Player') + `?id=${movie.id}`;
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -20,16 +28,18 @@ export default function MovieCard({ movie, onAddToList, isInList, index = 0 }) {
       onFocus={() => setIsHovered(true)}
       onBlur={() => setIsHovered(false)}
     >
-      <Link 
-        to={createPageUrl('Player') + `?id=${movie.id}`}
-        className="focus:outline-none block"
+      <div 
+        onClick={handleCardClick}
+        className="focus:outline-none block cursor-pointer"
         tabIndex={0}
-        onClick={(e) => {
-          // Ensure navigation happens
-          if (e.defaultPrevented) return;
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            window.location.href = createPageUrl('Player') + `?id=${movie.id}`;
+          }
         }}
       >
-        <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-[#1a1a1a] cursor-pointer">
+        <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-[#1a1a1a]">
           {/* Poster Image */}
           <img
             src={movie.poster_url}
