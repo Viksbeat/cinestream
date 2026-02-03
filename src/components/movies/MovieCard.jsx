@@ -22,10 +22,14 @@ export default function MovieCard({ movie, onAddToList, isInList, index = 0 }) {
     >
       <Link 
         to={createPageUrl('Player') + `?id=${movie.id}`}
-        className="focus:outline-none"
+        className="focus:outline-none block"
         tabIndex={0}
+        onClick={(e) => {
+          // Ensure navigation happens
+          if (e.defaultPrevented) return;
+        }}
       >
-        <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-[#1a1a1a]">
+        <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-[#1a1a1a] cursor-pointer">
           {/* Poster Image */}
           <img
             src={movie.poster_url}
