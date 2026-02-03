@@ -180,7 +180,7 @@ export default function Browse() {
               className={`flex-shrink-0 rounded-full ${
                 selectedGenre === genre
                   ? 'bg-[#D4AF37] hover:bg-[#E5C158] text-black'
-                  : 'border-white/20 hover:bg-white/10 text-white'
+                  : 'border-[#D4AF37]/30 hover:bg-[#D4AF37]/10 text-[#D4AF37]'
               }`}
             >
               {genre}
