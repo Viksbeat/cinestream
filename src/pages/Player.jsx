@@ -36,6 +36,11 @@ export default function Player() {
   const urlParams = new URLSearchParams(window.location.search);
   const movieId = urlParams.get('id');
 
+  // Scroll to top when page loads
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     const loadUser = async () => {
       try {
