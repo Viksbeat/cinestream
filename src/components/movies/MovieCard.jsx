@@ -124,7 +124,7 @@ export default function MovieCard({ movie, onAddToList, isInList, index = 0 }) {
             </button>
           </div>
         </div>
-      </Link>
+      </div>
 
       {/* Title Below (visible when not hovered) */}
       <div className={`mt-2 transition-opacity duration-300 ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
