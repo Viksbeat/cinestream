@@ -124,10 +124,18 @@ export default function Admin() {
   const pendingReviews = allReviews.filter(r => !r.is_approved);
 
   // Fetch all users
-  const { data: allUsers = [] } = useQuery({
+  const { data: allUsers = [], refetch: refetchUsers } = useQuery({
     queryKey: ['allUsers'],
     queryFn: () => base44.asServiceRole.entities.User.list('-created_date', 100),
+    staleTime: 0,
   });
+
+  // Refetch users when switching to users tab
+  useEffect(() => {
+    if (activeTab === 'users') {
+      refetchUsers();
+    }
+  }, [activeTab, refetchUsers]);
 
   // Fetch all watch history for analytics
   const { data: allWatchHistory = [] } = useQuery({
