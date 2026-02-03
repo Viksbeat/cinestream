@@ -14,11 +14,17 @@ export default function MovieCard({ movie, onAddToList, isInList, index = 0 }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05, duration: 0.4 }}
-      className="relative group flex-shrink-0 w-[160px] md:w-[200px] lg:w-[220px]"
+      className="relative group flex-shrink-0 w-[160px] md:w-[200px] lg:w-[220px] xl:w-[240px]"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onFocus={() => setIsHovered(true)}
+      onBlur={() => setIsHovered(false)}
     >
-      <Link to={createPageUrl('Player') + `?id=${movie.id}`}>
+      <Link 
+        to={createPageUrl('Player') + `?id=${movie.id}`}
+        className="focus:outline-none"
+        tabIndex={0}
+      >
         <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-[#1a1a1a]">
           {/* Poster Image */}
           <img

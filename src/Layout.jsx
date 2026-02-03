@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { Search, User, Menu, X, Home, Film, Bookmark, Clock, Settings, LogOut } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useTVNavigation } from '@/components/tv/TVKeyboardNav';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +20,7 @@ export default function Layout({ children, currentPageName }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  useTVNavigation();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -87,6 +89,20 @@ export default function Layout({ children, currentPageName }) {
         *::-webkit-scrollbar-thumb {
           background: #333;
           border-radius: 4px;
+        }
+        /* TV/Remote focus styles */
+        *:focus {
+          outline: 3px solid #D4AF37;
+          outline-offset: 3px;
+        }
+        button:focus, a:focus {
+          transform: scale(1.05);
+          z-index: 10;
+        }
+        @media (min-width: 1280px) {
+          body {
+            font-size: 18px;
+          }
         }
       `}</style>
 

@@ -107,9 +107,10 @@ export default function HeroSection({ movie, onAddToList, isInList }) {
                   size="lg"
                   variant="outline"
                   onClick={() => setShowTrailer(true)}
-                  className="border-white/30 hover:bg-white/10 px-6 py-6 rounded-full gap-2"
+                  className="border-white/30 hover:bg-white/10 px-6 py-6 xl:px-8 xl:py-8 xl:text-lg rounded-full gap-2 transition-all"
+                  tabIndex={0}
                 >
-                  <Film className="w-5 h-5" />
+                  <Film className="w-5 h-5 xl:w-6 xl:h-6" />
                   Watch Trailer
                 </Button>
               )}
@@ -117,20 +118,22 @@ export default function HeroSection({ movie, onAddToList, isInList }) {
                 size="lg"
                 variant="outline"
                 onClick={() => onAddToList?.(movie)}
-                className={`border-white/30 hover:bg-white/10 px-6 py-6 rounded-full gap-2 ${
+                className={`border-white/30 hover:bg-white/10 px-6 py-6 xl:px-8 xl:py-8 xl:text-lg rounded-full gap-2 transition-all ${
                   isInList ? 'bg-white/10' : ''
                 }`}
+                tabIndex={0}
               >
-                <Plus className={`w-5 h-5 ${isInList ? 'rotate-45' : ''} transition-transform`} />
+                <Plus className={`w-5 h-5 xl:w-6 xl:h-6 ${isInList ? 'rotate-45' : ''} transition-transform`} />
                 {isInList ? 'In My List' : 'Add to List'}
               </Button>
-              <Link to={createPageUrl('Player') + `?id=${movie.id}`}>
+              <Link to={createPageUrl('Player') + `?id=${movie.id}`} tabIndex={0}>
                 <Button
                   size="lg"
                   variant="ghost"
-                  className="hover:bg-white/10 px-6 py-6 rounded-full gap-2"
+                  className="hover:bg-white/10 px-6 py-6 xl:px-8 xl:py-8 xl:text-lg rounded-full gap-2 transition-all"
+                  tabIndex={-1}
                 >
-                  <Info className="w-5 h-5" />
+                  <Info className="w-5 h-5 xl:w-6 xl:h-6" />
                   More Info
                 </Button>
               </Link>

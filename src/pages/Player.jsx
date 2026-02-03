@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -19,6 +19,7 @@ import { getRecommendations } from '@/components/utils/recommendations';
 import { getUsersAlsoWatched } from '@/components/utils/collaborativeFiltering';
 
 export default function Player() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -248,6 +249,64 @@ export default function Player() {
       if (isPlaying) setShowControls(false);
     }, 3000);
   };
+
+  // Keyboard controls for TV
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (!videoRef.current) return;
+      
+      switch(e.key) {
+        case ' ':
+        case 'Enter':
+        case 'MediaPlayPause':
+          e.preventDefault();
+          togglePlay();
+          break;
+        case 'ArrowRight':
+          if (e.target.tagName !== 'INPUT') {
+            e.preventDefault();
+            videoRef.current.currentTime += 10;
+          }
+          break;
+        case 'ArrowLeft':
+          if (e.target.tagName !== 'INPUT') {
+            e.preventDefault();
+            videoRef.current.currentTime -= 10;
+          }
+          break;
+        case 'ArrowUp':
+          if (e.target.tagName !== 'INPUT') {
+            e.preventDefault();
+            const newVol = Math.min(1, volume + 0.1);
+            handleVolumeChange([newVol]);
+          }
+          break;
+        case 'ArrowDown':
+          if (e.target.tagName !== 'INPUT') {
+            e.preventDefault();
+            const newVol = Math.max(0, volume - 0.1);
+            handleVolumeChange([newVol]);
+          }
+          break;
+        case 'm':
+        case 'MediaVolumeMute':
+          toggleMute();
+          break;
+        case 'f':
+          toggleFullscreen();
+          break;
+        case 'Escape':
+        case 'Back':
+        case 'Backspace':
+          e.preventDefault();
+          navigate(-1);
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, [isPlaying, volume, navigate]);
 
   const formatTime = (time) => {
     const hours = Math.floor(time / 3600);
