@@ -132,13 +132,13 @@ export default function Layout({ children, currentPageName }) {
         <div className="max-w-[1800px] mx-auto px-4 md:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <Link to={createPageUrl('Home')} className="flex items-center gap-3">
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697deede265d9acdbc187371/40d460b69_Gemini_Generated_Image_hnzha4hnzha4hnzh.png"
-                alt="VIBEFLIX"
-                className="h-12 md:h-16 w-auto"
-                style={{ mixBlendMode: 'lighten', filter: 'brightness(1.2) contrast(1.5)' }}
-              />
+            <Link to={createPageUrl('Home')} className="flex items-center gap-2">
+              <div className="flex items-center">
+                <span className="text-2xl md:text-3xl font-black tracking-tight">
+                  <span className="text-white">VIBE</span>
+                  <span className="text-[#D4AF37]">FLIX</span>
+                </span>
+              </div>
             </Link>
 
             {/* Desktop Nav */}
@@ -298,13 +298,11 @@ export default function Layout({ children, currentPageName }) {
       <footer className="border-t border-white/10 mt-20">
         <div className="max-w-[1800px] mx-auto px-4 md:px-8 py-12">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2">
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697deede265d9acdbc187371/40d460b69_Gemini_Generated_Image_hnzha4hnzha4hnzh.png"
-                alt="VIBEFLIX"
-                className="h-8 w-auto"
-                style={{ mixBlendMode: 'lighten', filter: 'brightness(1.2) contrast(1.5)' }}
-              />
+            <div className="flex items-center">
+              <span className="text-lg font-black tracking-tight">
+                <span className="text-white">VIBE</span>
+                <span className="text-[#D4AF37]">FLIX</span>
+              </span>
             </div>
             <div className="flex items-center gap-6 text-sm text-white/50">
               <span>© 2026 Vibeflix. All rights reserved.</span>
