@@ -112,25 +112,25 @@ export default function Browse() {
   ];
 
   return (
-    <div className="min-h-screen pt-24 md:pt-28">
-      <div className="max-w-[1800px] mx-auto px-4 md:px-8">
+    <div className="min-h-screen pt-24 md:pt-28 xl:pt-32">
+      <div className="max-w-[1800px] mx-auto px-4 md:px-8 xl:px-12">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 md:mb-8 xl:mb-12">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold">Browse Movies</h1>
-            <p className="text-white/60 mt-1">
+            <h1 className="text-3xl md:text-4xl xl:text-5xl font-bold">Browse Movies</h1>
+            <p className="text-white/60 mt-1 text-base md:text-lg xl:text-xl">
               {filteredMovies.length} {filteredMovies.length === 1 ? 'movie' : 'movies'} available
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
             {/* Sort Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="border-white/20 hover:bg-white/10 gap-2">
-                  <Filter className="w-4 h-4" />
-                  Sort
-                  <ChevronDown className="w-4 h-4" />
+                <Button variant="outline" className="border-white/20 hover:bg-white/10 gap-2 h-10 md:h-11 xl:h-12 text-sm md:text-base">
+                  <Filter className="w-4 h-4 md:w-5 md:h-5" />
+                  <span className="hidden sm:inline">Sort</span>
+                  <ChevronDown className="w-4 h-4 md:w-5 md:h-5" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-[#1a1a1a] border-white/10 text-white">
@@ -154,30 +154,30 @@ export default function Browse() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setViewMode('grid')}
-                className={`w-8 h-8 rounded ${viewMode === 'grid' ? 'bg-white/10' : ''}`}
+                className={`w-10 h-10 md:w-11 md:h-11 xl:w-12 xl:h-12 rounded ${viewMode === 'grid' ? 'bg-white/10' : ''}`}
               >
-                <Grid className="w-4 h-4" />
+                <Grid className="w-4 h-4 md:w-5 md:h-5 xl:w-6 xl:h-6" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setViewMode('list')}
-                className={`w-8 h-8 rounded ${viewMode === 'list' ? 'bg-white/10' : ''}`}
+                className={`w-10 h-10 md:w-11 md:h-11 xl:w-12 xl:h-12 rounded ${viewMode === 'list' ? 'bg-white/10' : ''}`}
               >
-                <List className="w-4 h-4" />
+                <List className="w-4 h-4 md:w-5 md:h-5 xl:w-6 xl:h-6" />
               </Button>
             </div>
           </div>
         </div>
 
         {/* Genre Tabs */}
-        <div className="flex gap-2 overflow-x-auto pb-4 mb-8 scrollbar-hide">
+        <div className="flex gap-2 md:gap-3 overflow-x-auto pb-4 mb-6 md:mb-8 xl:mb-10 scrollbar-hide">
           {allGenres.map((genre) => (
             <Button
               key={genre}
               variant={selectedGenre === genre ? 'default' : 'outline'}
               onClick={() => setSelectedGenre(genre)}
-              className={`flex-shrink-0 rounded-full ${
+              className={`flex-shrink-0 rounded-full h-9 md:h-10 xl:h-12 px-4 md:px-5 xl:px-6 text-sm md:text-base xl:text-lg ${
                 selectedGenre === genre
                   ? 'bg-[#D4AF37] hover:bg-[#E5C158] text-black'
                   : 'border-[#D4AF37]/30 hover:bg-[#D4AF37]/10 text-[#D4AF37]'
@@ -199,8 +199,8 @@ export default function Browse() {
             animate={{ opacity: 1 }}
             className={
               viewMode === 'grid'
-                ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6'
-                : 'flex flex-col gap-4'
+                ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-6 gap-3 md:gap-4 xl:gap-6'
+                : 'flex flex-col gap-3 md:gap-4 xl:gap-5'
             }
           >
             <AnimatePresence>
@@ -241,16 +241,16 @@ function ListItem({ movie, isInList, onAddToList, index }) {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="flex gap-4 p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-colors"
+      className="flex gap-3 md:gap-4 xl:gap-6 p-3 md:p-4 xl:p-6 bg-white/5 rounded-xl hover:bg-white/10 transition-colors"
     >
       <img
         src={movie.poster_url}
         alt={movie.title}
-        className="w-20 h-28 object-cover rounded-lg flex-shrink-0"
+        className="w-16 h-24 md:w-20 md:h-28 xl:w-28 xl:h-40 object-cover rounded-lg flex-shrink-0"
       />
       <div className="flex-1 min-w-0">
-        <h3 className="font-semibold text-lg line-clamp-1">{movie.title}</h3>
-        <div className="flex items-center gap-2 text-sm text-white/60 mt-1">
+        <h3 className="font-semibold text-base md:text-lg xl:text-xl line-clamp-1">{movie.title}</h3>
+        <div className="flex items-center gap-2 text-xs md:text-sm xl:text-base text-white/60 mt-1">
           {movie.release_year && <span>{movie.release_year}</span>}
           {movie.duration && typeof movie.duration === 'string' && (
             <>
@@ -266,15 +266,15 @@ function ListItem({ movie, isInList, onAddToList, index }) {
           )}
         </div>
         {movie.genre && movie.genre.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-2">
+          <div className="flex flex-wrap gap-1 md:gap-1.5 mt-2">
             {movie.genre.slice(0, 3).map((g, i) => (
-              <span key={i} className="px-2 py-0.5 bg-white/10 rounded text-xs">
+              <span key={i} className="px-2 py-0.5 bg-white/10 rounded text-xs md:text-sm xl:text-base">
                 {g}
               </span>
             ))}
           </div>
         )}
-        <p className="text-sm text-white/60 mt-2 line-clamp-2">
+        <p className="text-xs md:text-sm xl:text-base text-white/60 mt-2 line-clamp-2">
           {movie.description}
         </p>
       </div>
@@ -282,7 +282,7 @@ function ListItem({ movie, isInList, onAddToList, index }) {
         variant="outline"
         size="sm"
         onClick={() => onAddToList(movie)}
-        className={`flex-shrink-0 ${isInList ? 'bg-white/10' : ''}`}
+        className={`flex-shrink-0 h-10 md:h-11 xl:h-12 px-4 md:px-5 xl:px-6 text-sm md:text-base ${isInList ? 'bg-white/10' : ''}`}
       >
         {isInList ? 'Added' : 'Add'}
       </Button>

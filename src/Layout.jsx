@@ -90,6 +90,30 @@ export default function Layout({ children, currentPageName }) {
           background: #333;
           border-radius: 4px;
         }
+        /* Mobile optimizations - larger touch targets */
+        @media (max-width: 767px) {
+          button, a {
+            min-height: 44px;
+            min-width: 44px;
+          }
+        }
+        /* TV/Large Screen optimizations */
+        @media (min-width: 1280px) {
+          html {
+            font-size: 18px;
+          }
+          h1 { font-size: 3rem; }
+          h2 { font-size: 2.25rem; }
+          h3 { font-size: 1.75rem; }
+        }
+        @media (min-width: 1920px) {
+          html {
+            font-size: 20px;
+          }
+          h1 { font-size: 3.5rem; }
+          h2 { font-size: 2.75rem; }
+          h3 { font-size: 2rem; }
+        }
         /* TV/Remote focus styles */
         *:focus {
           outline: 3px solid #D4AF37;
@@ -98,11 +122,6 @@ export default function Layout({ children, currentPageName }) {
         button:focus, a:focus {
           transform: scale(1.05);
           z-index: 10;
-        }
-        @media (min-width: 1280px) {
-          body {
-            font-size: 18px;
-          }
         }
       `}</style>
 
