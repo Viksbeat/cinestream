@@ -55,6 +55,7 @@ import MyList from './pages/MyList';
 import Player from './pages/Player';
 import Profile from './pages/Profile';
 import Search from './pages/Search';
+import DownloadLogo from './pages/DownloadLogo';
 import __Layout from './Layout.jsx';
 
 
@@ -67,6 +68,7 @@ export const PAGES = {
     "Player": Player,
     "Profile": Profile,
     "Search": Search,
+    "DownloadLogo": DownloadLogo,
 }
 
 export const pagesConfig = {
