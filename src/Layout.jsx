@@ -222,12 +222,21 @@ export default function Layout({ children, currentPageName }) {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button
-                  onClick={() => base44.auth.redirectToLogin()}
-                  className="bg-[#D4AF37] hover:bg-[#E5C158] text-black font-semibold rounded-full px-6"
-                >
-                  Sign In
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => base44.auth.redirectToLogin()}
+                    variant="outline"
+                    className="border-white/30 hover:bg-white/10 rounded-full px-6 hidden md:block"
+                  >
+                    Sign In
+                  </Button>
+                  <Button
+                    onClick={() => base44.auth.redirectToLogin()}
+                    className="bg-[#D4AF37] hover:bg-[#E5C158] text-black font-semibold rounded-full px-6"
+                  >
+                    Sign Up
+                  </Button>
+                </div>
               )}
 
               {/* Mobile Menu Button */}

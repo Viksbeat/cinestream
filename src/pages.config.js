@@ -49,26 +49,26 @@
  */
 import Admin from './pages/Admin';
 import Browse from './pages/Browse';
+import DownloadLogo from './pages/DownloadLogo';
 import History from './pages/History';
 import Home from './pages/Home';
 import MyList from './pages/MyList';
 import Player from './pages/Player';
 import Profile from './pages/Profile';
 import Search from './pages/Search';
-import DownloadLogo from './pages/DownloadLogo';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Admin": Admin,
     "Browse": Browse,
+    "DownloadLogo": DownloadLogo,
     "History": History,
     "Home": Home,
     "MyList": MyList,
     "Player": Player,
     "Profile": Profile,
     "Search": Search,
-    "DownloadLogo": DownloadLogo,
 }
 
 export const pagesConfig = {
