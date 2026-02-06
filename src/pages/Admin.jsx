@@ -186,7 +186,7 @@ export default function Admin() {
   // Review moderation mutations
   const approveReviewMutation = useMutation({
     mutationFn: async (reviewId) => {
-      await base44.asServiceRole.entities.Review.update(reviewId, { is_approved: true, is_flagged: false });
+      await base44.entities.Review.update(reviewId, { is_approved: true, is_flagged: false });
       toast.success('Review approved');
     },
     onSuccess: () => {
@@ -196,7 +196,7 @@ export default function Admin() {
 
   const deleteReviewMutation = useMutation({
     mutationFn: async (reviewId) => {
-      await base44.asServiceRole.entities.Review.delete(reviewId);
+      await base44.entities.Review.delete(reviewId);
       toast.success('Review deleted');
     },
     onSuccess: () => {
