@@ -207,7 +207,7 @@ export default function Admin() {
   // User management mutations
   const updateUserMutation = useMutation({
     mutationFn: async ({ userId, role }) => {
-      await base44.asServiceRole.entities.User.update(userId, { role });
+      await base44.entities.User.update(userId, { role });
       toast.success('User role updated');
     },
     onSuccess: () => {
@@ -219,7 +219,7 @@ export default function Admin() {
 
   const deleteUserMutation = useMutation({
     mutationFn: async (userId) => {
-      await base44.asServiceRole.entities.User.delete(userId);
+      await base44.entities.User.delete(userId);
       toast.success('User deleted');
     },
     onSuccess: () => {
