@@ -272,7 +272,7 @@ export default function Layout({ children, currentPageName }) {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                   <Input
                     type="text"
-                    placeholder="Search movies..."
+                    placeholder="Search by title, genre, director..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40 rounded-full"
