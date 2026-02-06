@@ -140,13 +140,13 @@ export default function Admin() {
   // Fetch all watch history for analytics
   const { data: allWatchHistory = [] } = useQuery({
     queryKey: ['allWatchHistory'],
-    queryFn: () => base44.asServiceRole.entities.WatchHistory.list('-last_watched', 1000),
+    queryFn: () => base44.entities.WatchHistory.list('-last_watched', 1000),
   });
 
   // Fetch all reviews for analytics
   const { data: allReviewsForAnalytics = [] } = useQuery({
     queryKey: ['allReviewsAnalytics'],
-    queryFn: () => base44.asServiceRole.entities.Review.list('-created_date', 1000),
+    queryFn: () => base44.entities.Review.list('-created_date', 1000),
   });
 
   // Create/Update mutation
