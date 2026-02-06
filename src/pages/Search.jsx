@@ -203,8 +203,11 @@ export default function Search() {
               <SearchIcon className="w-10 h-10 text-white/30" />
             </div>
             <h3 className="text-xl font-semibold mb-2">Start searching</h3>
-            <p className="text-white/60">
-              Enter a movie title, actor name, or genre
+            <p className="text-white/60 mb-4">
+              Search by title, genre, director, or actor name
+            </p>
+            <p className="text-sm text-white/40">
+              Try: "Action", "Christopher Nolan", or any movie title
             </p>
           </div>
         )}
