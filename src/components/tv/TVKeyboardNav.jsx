@@ -8,10 +8,16 @@ export function useTVNavigation() {
     const handleKeyDown = (e) => {
       const focusedElement = document.activeElement;
       
-      // Back button handling
+      // Back button handling - only if not typing in an input
       if (e.key === 'Backspace' || e.key === 'Back') {
-        e.preventDefault();
-        navigate(-1);
+        const isTyping = focusedElement.tagName === 'INPUT' || 
+                         focusedElement.tagName === 'TEXTAREA' || 
+                         focusedElement.isContentEditable;
+        
+        if (!isTyping) {
+          e.preventDefault();
+          navigate(-1);
+        }
         return;
       }
 
