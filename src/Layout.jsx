@@ -168,18 +168,29 @@ export default function Layout({ children, currentPageName }) {
 
             {/* Search & User */}
             <div className="flex items-center gap-3 md:gap-4">
+              {/* Desktop Search */}
               <form onSubmit={handleSearch} className="hidden md:flex items-center">
                 <div className="relative group">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 group-focus-within:text-[#D4AF37] transition-colors" />
                   <Input
                     type="text"
-                    placeholder="Search movies..."
+                    placeholder="Search by title, genre, director..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-48 lg:w-64 pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20 rounded-full"
                   />
                 </div>
               </form>
+
+              {/* Mobile Search Button */}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate(createPageUrl('Search'))}
+                className="lg:hidden rounded-full bg-white/5 hover:bg-white/10"
+              >
+                <Search className="w-5 h-5" />
+              </Button>
 
               {user ? (
                 <DropdownMenu>
