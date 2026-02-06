@@ -115,7 +115,7 @@ export default function Search() {
             <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
             <Input
               type="text"
-              placeholder="Search by title, actor, genre..."
+              placeholder="Search by title, genre, director, actor..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full h-14 pl-12 pr-12 text-lg bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20 rounded-2xl"
