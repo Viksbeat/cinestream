@@ -117,7 +117,7 @@ export default function Admin() {
   // Fetch all reviews for moderation
   const { data: allReviews = [] } = useQuery({
     queryKey: ['allReviews'],
-    queryFn: () => base44.asServiceRole.entities.Review.list('-created_date', 100),
+    queryFn: () => base44.entities.Review.list('-created_date', 100),
   });
 
   const flaggedReviews = allReviews.filter(r => r.is_flagged);
