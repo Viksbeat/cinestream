@@ -547,8 +547,17 @@ export default function Admin() {
         <>
           {/* Users Table */}
           <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
-            <div className="p-6 border-b border-white/10">
+            <div className="p-6 border-b border-white/10 flex items-center justify-between">
               <h2 className="text-xl font-bold">All Users ({allUsers.length})</h2>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => refetchUsers()}
+                className="border-white/20 hover:bg-white/10"
+              >
+                <Loader2 className="w-4 h-4 mr-2" />
+                Refresh
+              </Button>
             </div>
             <Table>
               <TableHeader>
