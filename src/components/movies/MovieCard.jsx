@@ -21,7 +21,7 @@ export default function MovieCard({ movie, onAddToList, isInList, index = 0 }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05, duration: 0.4 }}
-      className="relative group flex-shrink-0 w-[150px] sm:w-[160px] md:w-[200px] lg:w-[220px] xl:w-[260px] 2xl:w-[280px]"
+      className="relative group flex-shrink-0 w-[130px] sm:w-[140px] md:w-[160px] lg:w-[180px] xl:w-[200px] 2xl:w-[220px]"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onFocus={() => setIsHovered(true)}
