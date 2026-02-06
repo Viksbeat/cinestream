@@ -126,7 +126,7 @@ export default function Admin() {
   // Fetch all users
   const { data: allUsers = [], refetch: refetchUsers } = useQuery({
     queryKey: ['allUsers'],
-    queryFn: () => base44.asServiceRole.entities.User.list('-created_date', 100),
+    queryFn: () => base44.entities.User.list('-created_date', 100),
     staleTime: 0,
   });
 
