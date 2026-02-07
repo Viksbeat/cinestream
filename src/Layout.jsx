@@ -37,6 +37,22 @@ export default function Layout({ children, currentPageName }) {
   }, []);
 
   useEffect(() => {
+    const checkLocation = async () => {
+      try {
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        setIsNigeria(data.country_code === 'NG');
+      } catch (error) {
+        // If geolocation fails, allow access
+        setIsNigeria(true);
+      } finally {
+        setIsCheckingLocation(false);
+      }
+    };
+    checkLocation();
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
