@@ -19,6 +19,8 @@ export default function Layout({ children, currentPageName }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isCheckingLocation, setIsCheckingLocation] = useState(true);
+  const [isNigeria, setIsNigeria] = useState(false);
   const navigate = useNavigate();
   useTVNavigation();
 
