@@ -181,13 +181,12 @@ export default function Layout({ children, currentPageName }) {
         <div className="max-w-[1800px] mx-auto px-4 md:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-              <div className="flex items-center">
-                <span className="text-2xl md:text-3xl font-black tracking-tight">
-                  <span className="text-white">VIBE</span>
-                  <span className="text-[#D4AF37]">FLIX</span>
-                </span>
-              </div>
+            <Link to={createPageUrl('Home')} className="flex items-center">
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697deede265d9acdbc187371/bc65203a9_IMG_1935.jpeg" 
+                alt="MYVIBEFLIX" 
+                className="h-10 md:h-12 w-auto"
+              />
             </Link>
 
             {/* Desktop Nav */}
@@ -368,10 +367,11 @@ export default function Layout({ children, currentPageName }) {
         <div className="max-w-[1800px] mx-auto px-4 md:px-8 py-12">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center">
-              <span className="text-lg font-black tracking-tight">
-                <span className="text-white">VIBE</span>
-                <span className="text-[#D4AF37]">FLIX</span>
-              </span>
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697deede265d9acdbc187371/bc65203a9_IMG_1935.jpeg" 
+                alt="MYVIBEFLIX" 
+                className="h-8 w-auto"
+              />
             </div>
             <div className="flex items-center gap-6 text-sm text-white/50">
               <span>© 2026 Vibeflix. All rights reserved.</span>
