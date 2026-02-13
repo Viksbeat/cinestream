@@ -127,18 +127,18 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Header */}
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled ? 'bg-gradient-to-r from-[#4A5396] via-[#3B8B9E] to-[#4DB6AC]' : 'bg-gradient-to-r from-[#4A5396] via-[#3B8B9E] to-[#4DB6AC]'
+        isScrolled ? 'bg-[#0a0a0a]/95 backdrop-blur-lg' : 'bg-gradient-to-b from-[#1a1a1a]/95 via-[#0f0f0f]/80 to-transparent'
       }`}>
         <div className="max-w-[1800px] mx-auto px-4 md:px-8">
-          <div className="flex items-center justify-between py-8 md:py-12">
+          <div className="flex items-center justify-between py-4 md:py-6">
             {/* Logo */}
-            <Link to={createPageUrl('Home')} className="flex flex-col items-start gap-2">
+            <Link to={createPageUrl('Home')} className="flex flex-col items-start gap-1">
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697deede265d9acdbc187371/bc65203a9_IMG_1935.jpeg" 
                 alt="MYVIBEFLIX" 
-                className="h-24 md:h-32 w-auto"
+                className="h-12 md:h-16 w-auto"
               />
-              <p className="text-white/90 text-xs md:text-sm tracking-wide">YOUR MOVIES, YOUR MOOD.</p>
+              <p className="text-white/70 text-[10px] md:text-xs tracking-wide">YOUR MOVIES, YOUR MOOD.</p>
             </Link>
 
             {/* Desktop Nav */}
