@@ -19,8 +19,6 @@ export default function Layout({ children, currentPageName }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isCheckingLocation, setIsCheckingLocation] = useState(true);
-  const [isNigeria, setIsNigeria] = useState(false);
   const navigate = useNavigate();
   useTVNavigation();
 
@@ -34,22 +32,6 @@ export default function Layout({ children, currentPageName }) {
       }
     };
     loadUser();
-  }, []);
-
-  useEffect(() => {
-    const checkLocation = async () => {
-      try {
-        const response = await fetch('https://ipapi.co/json/');
-        const data = await response.json();
-        setIsNigeria(data.country_code === 'NG');
-      } catch (error) {
-        // If geolocation fails, allow access
-        setIsNigeria(true);
-      } finally {
-        setIsCheckingLocation(false);
-      }
-    };
-    checkLocation();
   }, []);
 
   useEffect(() => {
@@ -78,37 +60,6 @@ export default function Layout({ children, currentPageName }) {
     { name: 'My List', icon: Bookmark, page: 'MyList' },
     { name: 'History', icon: Clock, page: 'History' },
   ];
-
-  if (isCheckingLocation) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 border-4 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
-          <p className="text-white/60">Verifying location...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isNigeria) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
-        <div className="text-center max-w-md">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-red-500/20 flex items-center justify-center">
-            <X className="w-10 h-10 text-red-500" />
-          </div>
-          <h1 className="text-2xl font-bold mb-3">Access Restricted</h1>
-          <p className="text-white/60 mb-6">
-            VIBEFLIX is currently only available to users in Nigeria. We apologize for the inconvenience.
-          </p>
-          <div className="flex items-center justify-center gap-2 text-sm text-white/40">
-            <span className="text-2xl">🇳🇬</span>
-            <span>Nigeria only</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (currentPageName === 'Admin') {
     return <div className="min-h-screen bg-[#0a0a0a]">{children}</div>;
