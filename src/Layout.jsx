@@ -127,17 +127,18 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Header */}
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled ? 'bg-[#0a0a0a]/95 backdrop-blur-lg shadow-2xl' : 'bg-gradient-to-b from-black/80 to-transparent'
+        isScrolled ? 'bg-gradient-to-r from-[#4A5396] via-[#3B8B9E] to-[#4DB6AC]' : 'bg-gradient-to-r from-[#4A5396] via-[#3B8B9E] to-[#4DB6AC]'
       }`}>
         <div className="max-w-[1800px] mx-auto px-4 md:px-8">
-          <div className="flex items-center justify-between h-16 md:h-20">
+          <div className="flex items-center justify-between py-8 md:py-12">
             {/* Logo */}
-            <Link to={createPageUrl('Home')} className="flex items-center">
+            <Link to={createPageUrl('Home')} className="flex flex-col items-start gap-2">
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697deede265d9acdbc187371/bc65203a9_IMG_1935.jpeg" 
                 alt="MYVIBEFLIX" 
-                className="h-10 md:h-12 w-auto"
+                className="h-24 md:h-32 w-auto"
               />
+              <p className="text-white/90 text-xs md:text-sm tracking-wide">YOUR MOVIES, YOUR MOOD.</p>
             </Link>
 
             {/* Desktop Nav */}
@@ -166,36 +167,22 @@ export default function Layout({ children, currentPageName }) {
             </nav>
 
             {/* Search & User */}
-            <div className="flex items-center gap-3 md:gap-4">
-              {/* Desktop Search */}
-              <form onSubmit={handleSearch} className="hidden md:flex items-center">
-                <div className="relative group">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 group-focus-within:text-[#D4AF37] transition-colors" />
-                  <Input
-                    type="text"
-                    placeholder="Search by title, genre, director..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-48 lg:w-64 pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-[#D4AF37] focus:ring-[#D4AF37]/20 rounded-full"
-                  />
-                </div>
-              </form>
-
-              {/* Mobile Search Button */}
+            <div className="flex items-center gap-4 md:gap-6">
+              {/* Search Button */}
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => navigate(createPageUrl('Search'))}
-                className="lg:hidden rounded-full bg-white/5 hover:bg-white/10"
+                className="rounded-full bg-white/10 hover:bg-white/20 w-12 h-12"
               >
-                <Search className="w-5 h-5" />
+                <Search className="w-6 h-6" />
               </Button>
 
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="rounded-full bg-white/5 hover:bg-white/10">
-                      <User className="w-5 h-5" />
+                    <Button variant="ghost" size="icon" className="rounded-full bg-white/10 hover:bg-white/20 w-12 h-12">
+                      <User className="w-6 h-6" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 bg-[#1a1a1a] border-white/10 text-white">
@@ -253,10 +240,10 @@ export default function Layout({ children, currentPageName }) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="lg:hidden"
+                className="lg:hidden rounded-full bg-white/10 hover:bg-white/20 w-12 h-12"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </Button>
             </div>
           </div>
