@@ -123,7 +123,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-[#4A5396] via-[#2a2a3e] to-[#0a0a0a]" />
         
         {/* Movie Posters Background */}
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-30">
           <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 p-4 animate-pulse">
             {movies.slice(0, 24).map((movie, index) => (
               <div key={movie.id} className="aspect-[2/3] rounded-lg overflow-hidden" style={{ animationDelay: `${index * 0.1}s` }}>
@@ -138,7 +138,7 @@ export default function Home() {
         </div>
         
         {/* Overlay Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/60 via-[#0a0a0a]/80 to-[#0a0a0a]/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/40 via-[#0a0a0a]/60 to-[#0a0a0a]/80" />
 
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 md:px-8 py-20">
