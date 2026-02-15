@@ -10,6 +10,7 @@ import { getRecommendations } from '../components/utils/recommendations';
 
 export default function Home() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -19,6 +20,8 @@ export default function Home() {
         setUser(currentUser);
       } catch (e) {
         setUser(null);
+      } finally {
+        setLoading(false);
       }
     };
     loadUser();
@@ -104,10 +107,79 @@ export default function Home() {
     limit: 15
   }) : [];
 
-  if (isLoading) {
+  if (loading || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-10 h-10 animate-spin text-[#D4AF37]" />
+      </div>
+    );
+  }
+
+  // Show landing page for non-authenticated users
+  if (!user) {
+    return (
+      <div className="min-h-screen relative overflow-hidden">
+        {/* Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#4A5396] via-[#2a2a3e] to-[#0a0a0a]" />
+        
+        {/* Animated Background Pattern */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-[#D4AF37] rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#4DB6AC] rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 md:px-8 py-20">
+          {/* Logo & Tagline */}
+          <div className="text-center mb-12 space-y-6">
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697deede265d9acdbc187371/bc65203a9_IMG_1935.jpeg" 
+              alt="MYVIBEFLIX" 
+              className="h-32 md:h-40 lg:h-48 w-auto mx-auto mb-6"
+            />
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4">
+              YOUR MOVIES, YOUR MOOD.
+            </h1>
+            <p className="text-lg md:text-xl lg:text-2xl text-white/80 max-w-2xl mx-auto">
+              Discover thousands of movies and shows. Watch anywhere, anytime.
+            </p>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-16">
+            <button
+              onClick={() => base44.auth.redirectToLogin()}
+              className="px-8 py-4 bg-[#D4AF37] hover:bg-[#E5C158] text-black font-bold text-lg rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl"
+            >
+              Sign Up Free
+            </button>
+            <button
+              onClick={() => base44.auth.redirectToLogin()}
+              className="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-lg text-white font-semibold text-lg rounded-full border-2 border-white/30 transition-all duration-300 transform hover:scale-105"
+            >
+              Sign In
+            </button>
+          </div>
+
+          {/* Features */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl w-full">
+            <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-all duration-300">
+              <div className="text-[#D4AF37] text-4xl mb-4">📺</div>
+              <h3 className="text-xl font-bold text-white mb-2">Unlimited Entertainment</h3>
+              <p className="text-white/70">Stream thousands of movies and shows on demand</p>
+            </div>
+            <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-all duration-300">
+              <div className="text-[#D4AF37] text-4xl mb-4">💎</div>
+              <h3 className="text-xl font-bold text-white mb-2">Premium Quality</h3>
+              <p className="text-white/70">High-definition streaming for the best experience</p>
+            </div>
+            <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-all duration-300">
+              <div className="text-[#D4AF37] text-4xl mb-4">🎬</div>
+              <h3 className="text-xl font-bold text-white mb-2">Personalized Picks</h3>
+              <p className="text-white/70">Get recommendations based on your taste</p>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
