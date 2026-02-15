@@ -46,6 +46,11 @@ export default function Player() {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        // Check subscription status
+        if (currentUser.subscription_status !== 'active') {
+          window.location.href = '/Subscribe';
+        }
       } catch (e) {
         setUser(null);
       }
