@@ -12,29 +12,25 @@ export default function SubscriptionSuccess() {
   const [verifying, setVerifying] = useState(true);
 
   useEffect(() => {
-    // Verify subscription status
     const verifySubscription = async () => {
       let attempts = 0;
-      const maxAttempts = 15; // Increased to 30 seconds
+      const maxAttempts = 20;
       
       while (attempts < maxAttempts) {
         try {
-          console.log(`SubscriptionSuccess - Checking status (attempt ${attempts + 1}/${maxAttempts})`);
+          console.log(`Attempt ${attempts + 1}/${maxAttempts} - Checking subscription...`);
           const user = await base44.auth.me();
-          console.log('SubscriptionSuccess - User status:', user?.subscription_status);
           
           if (user?.subscription_status === 'active') {
-            console.log('SubscriptionSuccess - Subscription is active!');
+            console.log('✓ Subscription confirmed active!');
             setVerifying(false);
             
-            // Trigger confetti
             confetti({
               particleCount: 100,
               spread: 70,
               origin: { y: 0.6 }
             });
             
-            // Start countdown
             const countdownInterval = setInterval(() => {
               setCountdown(prev => {
                 if (prev <= 1) {
@@ -46,24 +42,23 @@ export default function SubscriptionSuccess() {
               });
             }, 1000);
             
-            return () => clearInterval(countdownInterval);
+            return;
           }
         } catch (e) {
-          console.error('Error verifying subscription:', e);
+          console.error('Verification error:', e);
         }
         
         attempts++;
         await new Promise(resolve => setTimeout(resolve, 2000));
       }
       
-      console.log('SubscriptionSuccess - Max attempts reached, redirecting anyway');
-      // If still not active after 30 seconds, redirect anyway
+      console.log('Max attempts reached - redirecting to home');
       setVerifying(false);
       window.location.href = createPageUrl('Home');
     };
     
     verifySubscription();
-  }, [navigate]);
+  }, []);
 
   if (verifying) {
     return (

@@ -27,24 +27,32 @@ export default function Subscribe() {
 
   useEffect(() => {
     loadUser();
-    
-    // Listen for storage events (when payment completes in another tab)
-    const handleStorageChange = () => {
-      loadUser();
-    };
-    window.addEventListener('storage', handleStorageChange);
-    
-    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
+
+  // Auto-redirect if already subscribed
+  useEffect(() => {
+    if (user?.subscription_status === 'active') {
+      const timer = setTimeout(() => {
+        window.location.href = createPageUrl('Home');
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [user]);
 
   const handleCheckStatus = async () => {
     setChecking(true);
     await loadUser();
+    const freshUser = await base44.auth.me();
+    setUser(freshUser);
     setChecking(false);
-    if (user?.subscription_status === 'active') {
-      toast.success('Subscription is active!');
+    
+    if (freshUser?.subscription_status === 'active') {
+      toast.success('Subscription confirmed! Redirecting...');
+      setTimeout(() => {
+        window.location.href = createPageUrl('Home');
+      }, 1500);
     } else {
-      toast.error('No active subscription found');
+      toast.error('No active subscription found. Please wait or contact support.');
     }
   };
 
@@ -97,16 +105,8 @@ export default function Subscribe() {
                   Expires: {new Date(user.subscription_expires_at).toLocaleDateString()}
                 </p>
               )}
+              <p className="text-white/50 text-sm mt-2">Redirecting to home...</p>
             </div>
-            <Button
-              onClick={handleCheckStatus}
-              disabled={checking}
-              variant="outline"
-              className="w-full border-white/30 hover:bg-white/10"
-            >
-              {checking ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-              Refresh Status
-            </Button>
           </div>
         ) : (
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
