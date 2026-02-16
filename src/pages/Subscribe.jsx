@@ -12,11 +12,7 @@ export default function Subscribe() {
 
   const loadUser = async () => {
     try {
-      // Force fresh user data
       const currentUser = await base44.auth.me();
-      console.log('Subscribe - User loaded:', currentUser?.email, 'Status:', currentUser?.subscription_status);
-      console.log('Subscribe - Expires at:', currentUser?.subscription_expires_at);
-      console.log('Subscribe - Plan:', currentUser?.subscription_plan);
       setUser(currentUser);
     } catch (e) {
       base44.auth.redirectToLogin();
@@ -27,6 +23,49 @@ export default function Subscribe() {
 
   useEffect(() => {
     loadUser();
+
+    // Check if returning from payment
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment');
+    
+    if (paymentStatus === 'success') {
+      setChecking(true);
+      toast.success('Payment received! Activating subscription...');
+      
+      // Poll for subscription activation every 2 seconds
+      let attempts = 0;
+      const maxAttempts = 15; // 30 seconds total
+      
+      const pollInterval = setInterval(async () => {
+        attempts++;
+        
+        try {
+          const freshUser = await base44.auth.me();
+          
+          if (freshUser?.subscription_status === 'active') {
+            clearInterval(pollInterval);
+            setUser(freshUser);
+            setChecking(false);
+            toast.success('Subscription activated! Redirecting...');
+            setTimeout(() => {
+              window.location.href = createPageUrl('Home');
+            }, 1000);
+          } else if (attempts >= maxAttempts) {
+            clearInterval(pollInterval);
+            setChecking(false);
+            toast.error('Taking longer than expected. Use manual activation below.');
+          }
+        } catch (error) {
+          if (attempts >= maxAttempts) {
+            clearInterval(pollInterval);
+            setChecking(false);
+            toast.error('Error checking status. Use manual activation below.');
+          }
+        }
+      }, 2000);
+      
+      return () => clearInterval(pollInterval);
+    }
   }, []);
 
   // Auto-redirect if already subscribed
@@ -78,10 +117,13 @@ export default function Subscribe() {
     }
   };
 
-  if (loading) {
+  if (loading || checking) {
     return (
-      <div className="min-h-screen flex items-center justify-center pt-20">
+      <div className="min-h-screen flex flex-col items-center justify-center pt-20 gap-4">
         <Loader2 className="w-10 h-10 animate-spin text-[#D4AF37]" />
+        <p className="text-white/80 animate-pulse">
+          {checking ? 'Activating your subscription...' : 'Loading...'}
+        </p>
       </div>
     );
   }
