@@ -20,8 +20,8 @@ Deno.serve(async (req) => {
         name: full_name,
         email: email
       },
-      notification_url: `${Deno.env.get('BASE44_APP_URL')}/api/functions/korapayWebhook`,
-      redirect_url: `${Deno.env.get('BASE44_APP_URL')}/subscription-success`
+      notification_url: `https://${req.headers.get('host')}/api/functions/korapayWebhook`,
+      redirect_url: `https://${req.headers.get('host')}/subscription-success`
     };
 
     const response = await fetch('https://api.korapay.com/merchant/api/v1/charges/initialize', {
