@@ -9,11 +9,21 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const body = await req.json();
+    const { plan } = body;
+
+    const planPrices = {
+      monthly: 2000,
+      '6months': 11000,
+      annual: 22000
+    };
+
+    const amount = planPrices[plan] || 2000;
     const { email, full_name } = user;
-    const reference = `SUB_${Date.now()}_${user.id}`;
+    const reference = `SUB_${plan}_${Date.now()}_${user.id}`;
 
     const korapayData = {
-      amount: 2000,
+      amount: amount,
       currency: "NGN",
       reference: reference,
       customer: {
@@ -21,7 +31,10 @@ Deno.serve(async (req) => {
         email: email
       },
       notification_url: `https://${req.headers.get('host')}/api/functions/korapayWebhook`,
-      redirect_url: `https://${req.headers.get('host')}/subscription-success`
+      redirect_url: `https://${req.headers.get('host')}/subscription-success`,
+      metadata: {
+        plan: plan
+      }
     };
 
     const response = await fetch('https://api.korapay.com/merchant/api/v1/charges/initialize', {

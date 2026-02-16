@@ -12,6 +12,7 @@ Deno.serve(async (req) => {
     if (data.event === 'charge.success' && data.data.status === 'success') {
       const reference = data.data.reference;
       const customerEmail = data.data.customer.email;
+      const plan = data.data.metadata?.plan || 'monthly';
 
       // Find user and update subscription
       const users = await base44.asServiceRole.entities.User.filter({ email: customerEmail });
@@ -19,10 +20,19 @@ Deno.serve(async (req) => {
       if (users.length > 0) {
         const user = users[0];
         const expiresAt = new Date();
-        expiresAt.setMonth(expiresAt.getMonth() + 1); // 1 month subscription
+        
+        // Calculate expiration based on plan
+        if (plan === 'monthly') {
+          expiresAt.setMonth(expiresAt.getMonth() + 1);
+        } else if (plan === '6months') {
+          expiresAt.setMonth(expiresAt.getMonth() + 6);
+        } else if (plan === 'annual') {
+          expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+        }
 
         await base44.asServiceRole.entities.User.update(user.id, {
           subscription_status: 'active',
+          subscription_plan: plan,
           subscription_expires_at: expiresAt.toISOString(),
           last_payment_reference: reference
         });

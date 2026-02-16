@@ -23,10 +23,10 @@ export default function Subscribe() {
     loadUser();
   }, []);
 
-  const handleSubscribe = async () => {
+  const handleSubscribe = async (plan) => {
     setProcessing(true);
     try {
-      const { data } = await base44.functions.invoke('initializeKorapayPayment');
+      const { data } = await base44.functions.invoke('initializeKorapayPayment', { plan });
       
       if (data.success) {
         window.location.href = data.checkout_url;
@@ -58,77 +58,144 @@ export default function Subscribe() {
             Subscribe to MYVIBEFLIX
           </h1>
           <p className="text-lg text-white/70">
-            Unlimited access to thousands of movies
+            Choose the perfect plan for you
           </p>
         </div>
 
-        <div className="bg-white/5 backdrop-blur-lg rounded-3xl border border-white/10 p-8 md:p-12 max-w-xl mx-auto">
-          <div className="text-center mb-8">
-            <div className="inline-flex items-baseline gap-2 mb-4">
-              <span className="text-5xl font-bold text-[#D4AF37]">₦2,000</span>
-              <span className="text-white/60">/month</span>
-            </div>
-          </div>
-
-          <div className="space-y-4 mb-8">
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-full bg-[#D4AF37]/20 flex items-center justify-center">
-                <Check className="w-4 h-4 text-[#D4AF37]" />
-              </div>
-              <span className="text-white/90">Unlimited movie streaming</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-full bg-[#D4AF37]/20 flex items-center justify-center">
-                <Check className="w-4 h-4 text-[#D4AF37]" />
-              </div>
-              <span className="text-white/90">HD quality playback</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-full bg-[#D4AF37]/20 flex items-center justify-center">
-                <Check className="w-4 h-4 text-[#D4AF37]" />
-              </div>
-              <span className="text-white/90">Watch on any device</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-full bg-[#D4AF37]/20 flex items-center justify-center">
-                <Check className="w-4 h-4 text-[#D4AF37]" />
-              </div>
-              <span className="text-white/90">Access to exclusive content</span>
-            </div>
-          </div>
-
-          {isActive ? (
-            <div className="text-center">
-              <div className="bg-green-500/20 border border-green-500/50 rounded-xl p-4 mb-4">
-                <p className="text-green-400 font-semibold">✓ You have an active subscription</p>
-                {user.subscription_expires_at && (
-                  <p className="text-white/60 text-sm mt-1">
-                    Expires: {new Date(user.subscription_expires_at).toLocaleDateString()}
-                  </p>
-                )}
-              </div>
-            </div>
-          ) : (
-            <Button
-              onClick={handleSubscribe}
-              disabled={processing}
-              className="w-full h-14 bg-[#D4AF37] hover:bg-[#E5C158] text-black font-bold text-lg rounded-xl"
-            >
-              {processing ? (
-                <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                'Subscribe Now'
+        {isActive ? (
+          <div className="max-w-xl mx-auto">
+            <div className="bg-green-500/20 border border-green-500/50 rounded-xl p-6 text-center">
+              <p className="text-green-400 font-semibold text-lg mb-2">✓ You have an active subscription</p>
+              <p className="text-white/80 mb-1">Plan: {user.subscription_plan === '6months' ? '6 Months' : user.subscription_plan === 'annual' ? 'Annual' : 'Monthly'}</p>
+              {user.subscription_expires_at && (
+                <p className="text-white/60 text-sm">
+                  Expires: {new Date(user.subscription_expires_at).toLocaleDateString()}
+                </p>
               )}
-            </Button>
-          )}
+            </div>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {/* Monthly Plan */}
+            <div className="bg-white/5 backdrop-blur-lg rounded-3xl border border-white/10 p-8 hover:border-[#D4AF37]/50 transition-all">
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-bold mb-2">Monthly</h3>
+                <div className="flex items-baseline justify-center gap-2 mb-1">
+                  <span className="text-4xl font-bold text-[#D4AF37]">₦2,000</span>
+                </div>
+                <p className="text-white/50 text-sm">per month</p>
+              </div>
 
-          <p className="text-center text-sm text-white/50 mt-6">
-            Secure payment powered by Korapay
-          </p>
-        </div>
+              <div className="space-y-3 mb-8">
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-sm text-white/80">Unlimited streaming</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-sm text-white/80">HD quality</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-sm text-white/80">All devices</span>
+                </div>
+              </div>
+
+              <Button
+                onClick={() => handleSubscribe('monthly')}
+                disabled={processing}
+                className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
+              >
+                {processing ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Choose Plan'}
+              </Button>
+            </div>
+
+            {/* 6 Months Plan */}
+            <div className="bg-white/5 backdrop-blur-lg rounded-3xl border-2 border-[#D4AF37] p-8 relative">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#D4AF37] text-black px-4 py-1 rounded-full text-sm font-bold">
+                Best Value
+              </div>
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-bold mb-2">6 Months</h3>
+                <div className="flex items-baseline justify-center gap-2 mb-1">
+                  <span className="text-4xl font-bold text-[#D4AF37]">₦11,000</span>
+                </div>
+                <p className="text-white/50 text-sm">₦1,833/month</p>
+                <p className="text-green-400 text-xs font-semibold mt-1">Save ₦1,000</p>
+              </div>
+
+              <div className="space-y-3 mb-8">
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-sm text-white/80">Unlimited streaming</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-sm text-white/80">HD quality</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-sm text-white/80">All devices</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-sm text-white/80">Priority support</span>
+                </div>
+              </div>
+
+              <Button
+                onClick={() => handleSubscribe('6months')}
+                disabled={processing}
+                className="w-full bg-[#D4AF37] hover:bg-[#E5C158] text-black font-bold"
+              >
+                {processing ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Choose Plan'}
+              </Button>
+            </div>
+
+            {/* Annual Plan */}
+            <div className="bg-white/5 backdrop-blur-lg rounded-3xl border border-white/10 p-8 hover:border-[#D4AF37]/50 transition-all">
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-bold mb-2">Annual</h3>
+                <div className="flex items-baseline justify-center gap-2 mb-1">
+                  <span className="text-4xl font-bold text-[#D4AF37]">₦22,000</span>
+                </div>
+                <p className="text-white/50 text-sm">₦1,833/month</p>
+                <p className="text-green-400 text-xs font-semibold mt-1">Save ₦2,000</p>
+              </div>
+
+              <div className="space-y-3 mb-8">
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-sm text-white/80">Unlimited streaming</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-sm text-white/80">HD quality</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-sm text-white/80">All devices</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-sm text-white/80">Priority support</span>
+                </div>
+              </div>
+
+              <Button
+                onClick={() => handleSubscribe('annual')}
+                disabled={processing}
+                className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
+              >
+                {processing ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Choose Plan'}
+              </Button>
+            </div>
+          </div>
+        )}
+
+        <p className="text-center text-sm text-white/50 mt-8">
+          Secure payment powered by Korapay
+        </p>
       </div>
     </div>
   );
