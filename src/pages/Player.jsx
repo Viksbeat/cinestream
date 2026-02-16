@@ -28,9 +28,12 @@ export default function Player() {
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  const [showSpeedMenu, setShowSpeedMenu] = useState(false);
   const videoRef = useRef(null);
   const containerRef = useRef(null);
   const controlsTimeout = useRef(null);
+  const hasResumed = useRef(false);
   const queryClient = useQueryClient();
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -101,6 +104,9 @@ export default function Player() {
     queryFn: () => base44.entities.WatchHistory.filter({ user_email: user.email }, '-last_watched', 100),
     enabled: !!user?.email,
   });
+
+  // Get current movie watch history for resume
+  const currentMovieHistory = watchHistory.find(h => h.movie_id === movieId);
 
   // Fetch ALL watch history for collaborative filtering
   const { data: allWatchHistory = [] } = useQuery({
@@ -221,6 +227,13 @@ export default function Player() {
   const handleLoadedMetadata = () => {
     if (videoRef.current) {
       setDuration(videoRef.current.duration);
+      
+      // Resume from last position if available
+      if (currentMovieHistory?.progress && !hasResumed.current && currentMovieHistory.progress > 10) {
+        videoRef.current.currentTime = currentMovieHistory.progress;
+        hasResumed.current = true;
+        toast.success(`Resumed from ${formatTime(currentMovieHistory.progress)}`);
+      }
     }
   };
 
@@ -243,6 +256,15 @@ export default function Player() {
     if (videoRef.current) {
       videoRef.current.muted = !isMuted;
       setIsMuted(!isMuted);
+    }
+  };
+
+  const handleSpeedChange = (speed) => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = speed;
+      setPlaybackSpeed(speed);
+      setShowSpeedMenu(false);
+      toast.success(`Speed: ${speed}x`);
     }
   };
 
@@ -539,6 +561,33 @@ export default function Player() {
                     <span className="text-sm text-white/80">
                       {formatTime(currentTime)} / {formatTime(duration)}
                     </span>
+
+                    {/* Playback Speed */}
+                    <div className="relative">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowSpeedMenu(!showSpeedMenu)}
+                        className="hover:bg-white/20 rounded-full text-sm px-3"
+                      >
+                        {playbackSpeed}x
+                      </Button>
+                      {showSpeedMenu && (
+                        <div className="absolute bottom-full mb-2 left-0 bg-[#1a1a1a] border border-white/10 rounded-lg p-2 space-y-1">
+                          {[0.5, 0.75, 1, 1.25, 1.5, 2].map((speed) => (
+                            <button
+                              key={speed}
+                              onClick={() => handleSpeedChange(speed)}
+                              className={`w-full px-4 py-2 text-sm rounded hover:bg-white/10 transition-colors ${
+                                playbackSpeed === speed ? 'bg-[#D4AF37] text-black' : 'text-white'
+                              }`}
+                            >
+                              {speed}x
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-2">
