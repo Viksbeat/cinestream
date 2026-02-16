@@ -47,17 +47,22 @@ export default function Player() {
   useEffect(() => {
     const loadUser = async () => {
       try {
+        // Force fresh user data (no cache)
         const currentUser = await base44.auth.me();
         console.log('Player - User loaded:', currentUser?.email, 'Status:', currentUser?.subscription_status);
         
-        // Check if subscription is active
-        if (!currentUser || currentUser.subscription_status !== 'active') {
-          console.log('Player - Not active, redirecting to subscribe');
+        // Check if subscription is active or if it expires in the future
+        const hasActiveSubscription = currentUser?.subscription_status === 'active' || 
+          (currentUser?.subscription_expires_at && new Date(currentUser.subscription_expires_at) > new Date());
+        
+        if (!currentUser || !hasActiveSubscription) {
+          console.log('Player - No active subscription, redirecting to subscribe');
           toast.error('Active subscription required to watch movies');
           navigate(createPageUrl('Subscribe'));
           return;
         }
         
+        console.log('Player - Access granted. Subscription valid until:', currentUser.subscription_expires_at);
         setUser(currentUser);
       } catch (e) {
         console.error('Player - Error loading user:', e);
@@ -65,7 +70,7 @@ export default function Player() {
       }
     };
     loadUser();
-  }, [navigate]);
+  }, [navigate, movieId]);
 
   // Fetch movie
   const { data: movie, isLoading } = useQuery({

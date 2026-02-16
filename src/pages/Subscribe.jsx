@@ -12,8 +12,11 @@ export default function Subscribe() {
 
   const loadUser = async () => {
     try {
+      // Force fresh user data
       const currentUser = await base44.auth.me();
       console.log('Subscribe - User loaded:', currentUser?.email, 'Status:', currentUser?.subscription_status);
+      console.log('Subscribe - Expires at:', currentUser?.subscription_expires_at);
+      console.log('Subscribe - Plan:', currentUser?.subscription_plan);
       setUser(currentUser);
     } catch (e) {
       base44.auth.redirectToLogin();
@@ -24,6 +27,14 @@ export default function Subscribe() {
 
   useEffect(() => {
     loadUser();
+    
+    // Listen for storage events (when payment completes in another tab)
+    const handleStorageChange = () => {
+      loadUser();
+    };
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const handleCheckStatus = async () => {
