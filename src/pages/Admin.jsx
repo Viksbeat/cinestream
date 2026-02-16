@@ -407,6 +407,18 @@ export default function Admin() {
         </Button>
         <Button
           variant="ghost"
+          onClick={() => setActiveTab('subscriptions')}
+          className={`rounded-none pb-3 ${
+            activeTab === 'subscriptions' 
+              ? 'border-b-2 border-[#D4AF37] text-[#D4AF37]' 
+              : 'text-white/60'
+          }`}
+        >
+          <Crown className="w-4 h-4 mr-2" />
+          Subscriptions
+        </Button>
+        <Button
+          variant="ghost"
           onClick={() => setActiveTab('analytics')}
           className={`rounded-none pb-3 ${
             activeTab === 'analytics' 
@@ -420,7 +432,84 @@ export default function Admin() {
       </div>
 
       {/* Content */}
-      {activeTab === 'analytics' ? (
+      {activeTab === 'subscriptions' ? (
+        <>
+          {/* Subscription Debugging */}
+          <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <h3 className="text-xl font-bold mb-4">Subscription Debugging</h3>
+            
+            <div className="space-y-4 mb-6">
+              <div>
+                <Label className="block text-sm font-medium mb-2">User Email</Label>
+                <Input
+                  type="email"
+                  placeholder="user@example.com"
+                  className="bg-white/5 border-white/10"
+                  id="debug-email"
+                />
+              </div>
+              
+              <div className="flex gap-3">
+                <Button
+                  onClick={async () => {
+                    const email = document.getElementById('debug-email').value;
+                    if (!email) {
+                      toast.error('Enter an email');
+                      return;
+                    }
+                    try {
+                      const { data } = await base44.functions.invoke('checkWebhookLogs', { userEmail: email });
+                      console.log('User Debug Info:', data);
+                      alert(JSON.stringify(data, null, 2));
+                    } catch (e) {
+                      toast.error(e.message);
+                    }
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  Check User Status
+                </Button>
+                
+                <Button
+                  onClick={async () => {
+                    const email = document.getElementById('debug-email').value;
+                    const plan = prompt('Enter plan (monthly/6months/annual):', 'monthly');
+                    if (!email || !plan) return;
+                    
+                    if (!confirm(`Manually activate ${plan} subscription for ${email}?`)) return;
+                    
+                    try {
+                      const { data } = await base44.functions.invoke('manualActivateSubscription', { 
+                        userEmail: email, 
+                        plan 
+                      });
+                      toast.success('Subscription activated!');
+                      console.log('Activation result:', data);
+                      queryClient.invalidateQueries(['users']);
+                    } catch (e) {
+                      toast.error(e.message);
+                    }
+                  }}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  Manual Activate
+                </Button>
+              </div>
+            </div>
+
+            <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
+              <h4 className="font-semibold mb-2">Webhook Setup Instructions:</h4>
+              <ol className="text-sm space-y-1 list-decimal list-inside text-white/80">
+                <li>Go to Dashboard → Code → Functions → korapayWebhook</li>
+                <li>Copy the function endpoint URL</li>
+                <li>Go to your Korapay dashboard → Settings → Webhooks</li>
+                <li>Add the URL and enable webhook notifications</li>
+                <li>Test payment and check function logs</li>
+              </ol>
+            </div>
+          </div>
+        </>
+      ) : activeTab === 'analytics' ? (
         <>
           {/* Analytics Dashboard */}
           <div className="space-y-8">
