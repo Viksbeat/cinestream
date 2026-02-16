@@ -48,28 +48,15 @@ export default function Player() {
     const loadUser = async () => {
       try {
         const currentUser = await base44.auth.me();
-        console.log('Player - Checking access:', {
-          email: currentUser?.email,
-          status: currentUser?.subscription_status,
-          expires: currentUser?.subscription_expires_at
-        });
         
-        // Check subscription status and expiry
-        const isActive = currentUser?.subscription_status === 'active';
-        const expiryDate = currentUser?.subscription_expires_at ? new Date(currentUser.subscription_expires_at) : null;
-        const notExpired = expiryDate && expiryDate > new Date();
-        
-        if (!currentUser || (!isActive && !notExpired)) {
-          console.log('Player - Access denied, redirecting to subscribe');
+        if (!currentUser || currentUser.subscription_status !== 'active') {
           toast.error('Please subscribe to watch movies');
           navigate(createPageUrl('Subscribe'));
           return;
         }
         
-        console.log('Player - Access granted until:', expiryDate?.toISOString());
         setUser(currentUser);
       } catch (e) {
-        console.error('Player - Error:', e);
         navigate(createPageUrl('Subscribe'));
       }
     };

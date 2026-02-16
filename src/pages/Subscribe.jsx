@@ -39,20 +39,25 @@ export default function Subscribe() {
     }
   }, [user]);
 
-  const handleCheckStatus = async () => {
+  const handleManualActivate = async (plan) => {
     setChecking(true);
-    await loadUser();
-    const freshUser = await base44.auth.me();
-    setUser(freshUser);
-    setChecking(false);
-    
-    if (freshUser?.subscription_status === 'active') {
-      toast.success('Subscription confirmed! Redirecting...');
-      setTimeout(() => {
-        window.location.href = createPageUrl('Home');
-      }, 1500);
-    } else {
-      toast.error('No active subscription found. Please wait or contact support.');
+    try {
+      const { data } = await base44.functions.invoke('manualActivate', { plan });
+      
+      if (data.success) {
+        toast.success('Subscription activated! Redirecting...');
+        await loadUser();
+        setTimeout(() => {
+          window.location.href = createPageUrl('Home');
+        }, 1500);
+      } else {
+        toast.error('Activation failed. Please contact support.');
+      }
+    } catch (error) {
+      console.error('Manual activation error:', error);
+      toast.error('Error activating subscription');
+    } finally {
+      setChecking(false);
     }
   };
 
@@ -227,20 +232,40 @@ export default function Subscribe() {
               </Button>
             </div>
 
-            {/* Check Status Button for users who already paid */}
+            {/* Manual Activation for users who already paid */}
             <div className="mt-12 text-center">
-              <div className="bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 p-6 max-w-md mx-auto">
-                <p className="text-white/80 text-sm mb-3">Already completed payment?</p>
-                <Button
-                  onClick={handleCheckStatus}
-                  disabled={checking}
-                  variant="outline"
-                  className="w-full border-[#D4AF37]/50 hover:bg-[#D4AF37]/10"
-                >
-                  {checking ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                  Verify & Activate Subscription
-                </Button>
-                <p className="text-white/50 text-xs mt-2">Click this if you just completed payment</p>
+              <div className="bg-gradient-to-br from-[#D4AF37]/20 to-[#E5C158]/10 backdrop-blur-lg rounded-xl border-2 border-[#D4AF37]/50 p-8 max-w-lg mx-auto">
+                <h3 className="text-xl font-bold text-white mb-3">Already Paid?</h3>
+                <p className="text-white/80 text-sm mb-6">If you just completed your payment, click below to activate your subscription instantly:</p>
+                
+                <div className="space-y-3">
+                  <Button
+                    onClick={() => handleManualActivate('monthly')}
+                    disabled={checking}
+                    className="w-full bg-[#D4AF37] hover:bg-[#E5C158] text-black font-bold"
+                  >
+                    {checking ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                    I Paid ₦2,000 (Monthly)
+                  </Button>
+                  <Button
+                    onClick={() => handleManualActivate('6months')}
+                    disabled={checking}
+                    className="w-full bg-[#D4AF37] hover:bg-[#E5C158] text-black font-bold"
+                  >
+                    {checking ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                    I Paid ₦11,000 (6 Months)
+                  </Button>
+                  <Button
+                    onClick={() => handleManualActivate('annual')}
+                    disabled={checking}
+                    className="w-full bg-[#D4AF37] hover:bg-[#E5C158] text-black font-bold"
+                  >
+                    {checking ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                    I Paid ₦22,000 (Annual)
+                  </Button>
+                </div>
+                
+                <p className="text-white/50 text-xs mt-4">Click the button matching your payment amount</p>
               </div>
             </div>
           </div>
