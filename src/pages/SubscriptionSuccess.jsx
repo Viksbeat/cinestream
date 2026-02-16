@@ -1,36 +1,75 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
-import { CheckCircle, Sparkles } from 'lucide-react';
+import { CheckCircle, Sparkles, Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import confetti from 'canvas-confetti';
+import { base44 } from '@/api/base44Client';
 
 export default function SubscriptionSuccess() {
   const navigate = useNavigate();
   const [countdown, setCountdown] = useState(5);
+  const [verifying, setVerifying] = useState(true);
 
   useEffect(() => {
-    // Trigger confetti
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 }
-    });
-
-    // Countdown timer
-    const countdownInterval = setInterval(() => {
-      setCountdown(prev => {
-        if (prev <= 1) {
-          clearInterval(countdownInterval);
-          navigate(createPageUrl('Home'));
-          return 0;
+    // Verify subscription status
+    const verifySubscription = async () => {
+      let attempts = 0;
+      const maxAttempts = 10;
+      
+      while (attempts < maxAttempts) {
+        try {
+          const user = await base44.auth.me();
+          if (user?.subscription_status === 'active') {
+            setVerifying(false);
+            
+            // Trigger confetti
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 }
+            });
+            
+            // Start countdown
+            const countdownInterval = setInterval(() => {
+              setCountdown(prev => {
+                if (prev <= 1) {
+                  clearInterval(countdownInterval);
+                  window.location.href = createPageUrl('Home');
+                  return 0;
+                }
+                return prev - 1;
+              });
+            }, 1000);
+            
+            return () => clearInterval(countdownInterval);
+          }
+        } catch (e) {
+          console.error('Error verifying subscription:', e);
         }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(countdownInterval);
+        
+        attempts++;
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+      
+      // If still not active after 20 seconds, redirect anyway
+      setVerifying(false);
+      window.location.href = createPageUrl('Home');
+    };
+    
+    verifySubscription();
   }, [navigate]);
+
+  if (verifying) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0a0a0a]">
+        <div className="text-center">
+          <Loader2 className="w-16 h-16 animate-spin text-[#D4AF37] mx-auto mb-4" />
+          <p className="text-white/70 text-lg">Activating your subscription...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0a0a0a]">
@@ -61,7 +100,7 @@ export default function SubscriptionSuccess() {
 
         <div className="space-y-4">
           <Button
-            onClick={() => navigate(createPageUrl('Home'))}
+            onClick={() => window.location.href = createPageUrl('Home')}
             className="w-full md:w-auto bg-[#D4AF37] hover:bg-[#E5C158] text-black font-bold text-lg px-12 py-6 rounded-xl"
           >
             Start Watching Now
