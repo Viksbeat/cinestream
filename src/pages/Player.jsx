@@ -47,16 +47,22 @@ export default function Player() {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
         
-        // Check subscription status
-        if (currentUser.subscription_status !== 'active') {
-          window.location.href = '/Subscribe';
+        // Check subscription status - reload user data to get latest
+        if (currentUser?.subscription_status !== 'active') {
+          // Re-fetch user to ensure we have the latest subscription status
+          const refreshedUser = await base44.auth.me();
+          if (refreshedUser?.subscription_status !== 'active') {
+            navigate(createPageUrl('Subscribe'));
+          } else {
+            setUser(refreshedUser);
+          }
         }
       } catch (e) {
         setUser(null);
       }
     };
     loadUser();
-  }, []);
+  }, [navigate]);
 
   // Fetch movie
   const { data: movie, isLoading } = useQuery({
