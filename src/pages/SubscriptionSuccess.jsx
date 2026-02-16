@@ -15,12 +15,16 @@ export default function SubscriptionSuccess() {
     // Verify subscription status
     const verifySubscription = async () => {
       let attempts = 0;
-      const maxAttempts = 10;
+      const maxAttempts = 15; // Increased to 30 seconds
       
       while (attempts < maxAttempts) {
         try {
+          console.log(`SubscriptionSuccess - Checking status (attempt ${attempts + 1}/${maxAttempts})`);
           const user = await base44.auth.me();
+          console.log('SubscriptionSuccess - User status:', user?.subscription_status);
+          
           if (user?.subscription_status === 'active') {
+            console.log('SubscriptionSuccess - Subscription is active!');
             setVerifying(false);
             
             // Trigger confetti
@@ -52,7 +56,8 @@ export default function SubscriptionSuccess() {
         await new Promise(resolve => setTimeout(resolve, 2000));
       }
       
-      // If still not active after 20 seconds, redirect anyway
+      console.log('SubscriptionSuccess - Max attempts reached, redirecting anyway');
+      // If still not active after 30 seconds, redirect anyway
       setVerifying(false);
       window.location.href = createPageUrl('Home');
     };
