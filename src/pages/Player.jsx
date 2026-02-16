@@ -45,17 +45,20 @@ export default function Player() {
     const loadUser = async () => {
       try {
         const currentUser = await base44.auth.me();
-        setUser(currentUser);
         
-        // Check subscription status - reload user data to get latest
+        // Check subscription status
         if (currentUser?.subscription_status !== 'active') {
-          // Re-fetch user to ensure we have the latest subscription status
+          // Wait a moment and check again (in case webhook just updated)
+          await new Promise(resolve => setTimeout(resolve, 1500));
           const refreshedUser = await base44.auth.me();
+          
           if (refreshedUser?.subscription_status !== 'active') {
             navigate(createPageUrl('Subscribe'));
-          } else {
-            setUser(refreshedUser);
+            return;
           }
+          setUser(refreshedUser);
+        } else {
+          setUser(currentUser);
         }
       } catch (e) {
         setUser(null);
