@@ -44,24 +44,23 @@ export default function Player() {
   useEffect(() => {
     const loadUser = async () => {
       try {
+        // Force fresh user data - bypass any caching
         const currentUser = await base44.auth.me();
+        console.log('Player - User loaded:', currentUser?.email, 'Status:', currentUser?.subscription_status);
         
-        // Check subscription status
-        if (currentUser?.subscription_status !== 'active') {
-          // Wait a moment and check again (in case webhook just updated)
-          await new Promise(resolve => setTimeout(resolve, 1500));
-          const refreshedUser = await base44.auth.me();
-          
-          if (refreshedUser?.subscription_status !== 'active') {
+        setUser(currentUser);
+        
+        // Only redirect if definitively not active
+        if (!currentUser || currentUser.subscription_status !== 'active') {
+          console.log('Player - Redirecting to subscribe, user status:', currentUser?.subscription_status);
+          setTimeout(() => {
             navigate(createPageUrl('Subscribe'));
-            return;
-          }
-          setUser(refreshedUser);
-        } else {
-          setUser(currentUser);
+          }, 500);
         }
       } catch (e) {
+        console.error('Player - Error loading user:', e);
         setUser(null);
+        navigate(createPageUrl('Subscribe'));
       }
     };
     loadUser();
