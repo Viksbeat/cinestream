@@ -44,22 +44,20 @@ export default function Player() {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        // Force fresh user data - bypass any caching
         const currentUser = await base44.auth.me();
         console.log('Player - User loaded:', currentUser?.email, 'Status:', currentUser?.subscription_status);
         
-        setUser(currentUser);
-        
-        // Only redirect if definitively not active
+        // Check if subscription is active
         if (!currentUser || currentUser.subscription_status !== 'active') {
-          console.log('Player - Redirecting to subscribe, user status:', currentUser?.subscription_status);
-          setTimeout(() => {
-            navigate(createPageUrl('Subscribe'));
-          }, 500);
+          console.log('Player - Not active, redirecting to subscribe');
+          toast.error('Active subscription required to watch movies');
+          navigate(createPageUrl('Subscribe'));
+          return;
         }
+        
+        setUser(currentUser);
       } catch (e) {
         console.error('Player - Error loading user:', e);
-        setUser(null);
         navigate(createPageUrl('Subscribe'));
       }
     };

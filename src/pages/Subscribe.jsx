@@ -8,20 +8,34 @@ export default function Subscribe() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
+  const [checking, setChecking] = useState(false);
+
+  const loadUser = async () => {
+    try {
+      const currentUser = await base44.auth.me();
+      console.log('Subscribe - User loaded:', currentUser?.email, 'Status:', currentUser?.subscription_status);
+      setUser(currentUser);
+    } catch (e) {
+      base44.auth.redirectToLogin();
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-      } catch (e) {
-        base44.auth.redirectToLogin();
-      } finally {
-        setLoading(false);
-      }
-    };
     loadUser();
   }, []);
+
+  const handleCheckStatus = async () => {
+    setChecking(true);
+    await loadUser();
+    setChecking(false);
+    if (user?.subscription_status === 'active') {
+      toast.success('Subscription is active!');
+    } else {
+      toast.error('No active subscription found');
+    }
+  };
 
   const handleSubscribe = async (plan) => {
     setProcessing(true);
@@ -63,7 +77,7 @@ export default function Subscribe() {
         </div>
 
         {isActive ? (
-          <div className="max-w-xl mx-auto">
+          <div className="max-w-xl mx-auto space-y-4">
             <div className="bg-green-500/20 border border-green-500/50 rounded-xl p-6 text-center">
               <p className="text-green-400 font-semibold text-lg mb-2">✓ You have an active subscription</p>
               <p className="text-white/80 mb-1">Plan: {user.subscription_plan === '6months' ? '6 Months' : user.subscription_plan === 'annual' ? 'Annual' : 'Monthly'}</p>
@@ -73,6 +87,15 @@ export default function Subscribe() {
                 </p>
               )}
             </div>
+            <Button
+              onClick={handleCheckStatus}
+              disabled={checking}
+              variant="outline"
+              className="w-full border-white/30 hover:bg-white/10"
+            >
+              {checking ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+              Refresh Status
+            </Button>
           </div>
         ) : (
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -107,6 +130,20 @@ export default function Subscribe() {
                 className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
               >
                 {processing ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Choose Plan'}
+              </Button>
+            </div>
+
+            {/* Check Status Button for users who already paid */}
+            <div className="mt-8 text-center">
+              <p className="text-white/60 text-sm mb-3">Already paid?</p>
+              <Button
+                onClick={handleCheckStatus}
+                disabled={checking}
+                variant="outline"
+                className="border-white/30 hover:bg-white/10"
+              >
+                {checking ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                Check Subscription Status
               </Button>
             </div>
 
