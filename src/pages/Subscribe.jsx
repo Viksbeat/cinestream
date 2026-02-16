@@ -144,19 +144,7 @@ export default function Subscribe() {
               </Button>
             </div>
 
-            {/* Check Status Button for users who already paid */}
-            <div className="mt-8 text-center">
-              <p className="text-white/60 text-sm mb-3">Already paid?</p>
-              <Button
-                onClick={handleCheckStatus}
-                disabled={checking}
-                variant="outline"
-                className="border-white/30 hover:bg-white/10"
-              >
-                {checking ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                Check Subscription Status
-              </Button>
-            </div>
+
 
             {/* 6 Months Plan */}
             <div className="bg-white/5 backdrop-blur-lg rounded-3xl border-2 border-[#D4AF37] p-8 relative">
@@ -237,6 +225,23 @@ export default function Subscribe() {
               >
                 {processing ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Choose Plan'}
               </Button>
+            </div>
+
+            {/* Check Status Button for users who already paid */}
+            <div className="mt-12 text-center">
+              <div className="bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 p-6 max-w-md mx-auto">
+                <p className="text-white/80 text-sm mb-3">Already completed payment?</p>
+                <Button
+                  onClick={handleCheckStatus}
+                  disabled={checking}
+                  variant="outline"
+                  className="w-full border-[#D4AF37]/50 hover:bg-[#D4AF37]/10"
+                >
+                  {checking ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                  Verify & Activate Subscription
+                </Button>
+                <p className="text-white/50 text-xs mt-2">Click this if you just completed payment</p>
+              </div>
             </div>
           </div>
         )}
