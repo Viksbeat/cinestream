@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
         email: email
       },
       notification_url: `https://${req.headers.get('host')}/api/functions/korapayWebhook`,
-      redirect_url: `https://${req.headers.get('host')}/subscription-success`,
+      redirect_url: `${req.headers.get('origin') || `https://${req.headers.get('host')}`}/SubscriptionSuccess`,
       metadata: {
         plan: plan
       }
