@@ -8,18 +8,56 @@ import TrailerModal from './TrailerModal';
 
 export default function HeroSection({ movie, onAddToList, isInList }) {
   const [showTrailer, setShowTrailer] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
   
   if (!movie) return null;
 
+  const hasVideo = movie.video_url && (
+    movie.video_url.includes('iframe') ||
+    movie.video_url.includes('embed') ||
+    movie.video_url.includes('player.mediadelivery.net') ||
+    movie.video_url.includes('iframe.mediadelivery.net') ||
+    movie.video_url.includes('bunnycdn.com') ||
+    movie.video_url.includes('b-cdn.net') ||
+    movie.video_url.endsWith('.mp4') ||
+    movie.video_url.endsWith('.webm')
+  );
+
   return (
     <div className="relative h-[85vh] md:h-[90vh] w-full overflow-hidden">
-      {/* Background Image */}
+      {/* Background: Video or Image */}
       <div className="absolute inset-0">
+        {/* Fallback image always rendered beneath */}
         <img
           src={movie.backdrop_url || movie.poster_url}
           alt={movie.title}
           className="w-full h-full object-cover"
         />
+
+        {/* Video overlay */}
+        {hasVideo && (
+          movie.video_url.endsWith('.mp4') || movie.video_url.endsWith('.webm') ? (
+            <video
+              src={movie.video_url}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
+              autoPlay
+              muted
+              loop
+              playsInline
+              onCanPlay={() => setVideoLoaded(true)}
+            />
+          ) : (
+            <iframe
+              src={movie.video_url.includes('?') ? `${movie.video_url}&autoplay=1&muted=1&loop=1&controls=0&preload=true` : `${movie.video_url}?autoplay=1&muted=1&loop=1&controls=0&preload=true`}
+              className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
+              style={{ border: 'none', transform: 'scale(1.05)' }}
+              allow="autoplay; encrypted-media"
+              onLoad={() => setVideoLoaded(true)}
+              title={movie.title}
+            />
+          )
+        )}
+
         <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/70 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-[#0a0a0a]/30" />
       </div>
