@@ -3,11 +3,15 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { email, full_name } = await req.json();
-
-    if (!email) {
-      return Response.json({ error: 'Email required' }, { status: 400 });
+    
+    // Get current user - this will be triggered when they first log in
+    const user = await base44.auth.me();
+    
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const { email, full_name } = user;
 
     // Get Gmail access token
     const accessToken = await base44.asServiceRole.connectors.getAccessToken('gmail');
