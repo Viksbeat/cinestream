@@ -154,16 +154,6 @@ export default function Layout({ children, currentPageName }) {
                   {link.name}
                 </Link>
               ))}
-              {user && (
-                <Link
-                  to={createPageUrl('Subscribe')}
-                  className={`text-sm font-medium transition-colors hover:text-[#D4AF37] ${
-                    currentPageName === 'Subscribe' ? 'text-[#D4AF37]' : 'text-white/70'
-                  } ${user.subscription_status === 'active' ? 'text-green-400' : ''}`}
-                >
-                  {user.subscription_status === 'active' ? '✓ Subscribed' : 'Subscribe'}
-                </Link>
-              )}
               {user?.role === 'admin' && (
                 <Link
                   to={createPageUrl('Admin')}
@@ -290,20 +280,6 @@ export default function Layout({ children, currentPageName }) {
                   {link.name}
                 </Link>
               ))}
-              {user && (
-                <Link
-                  to={createPageUrl('Subscribe')}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                    user.subscription_status === 'active' 
-                      ? 'text-green-400 hover:bg-white/5' 
-                      : 'text-white/70 hover:bg-white/5'
-                  }`}
-                >
-                  <Bookmark className="w-5 h-5" />
-                  {user.subscription_status === 'active' ? '✓ Subscribed' : 'Subscribe'}
-                </Link>
-              )}
               {user?.role === 'admin' && (
                 <Link
                   to={createPageUrl('Admin')}

@@ -48,16 +48,9 @@ export default function Player() {
     const loadUser = async () => {
       try {
         const currentUser = await base44.auth.me();
-        
-        if (!currentUser || currentUser.subscription_status !== 'active') {
-          toast.error('Please subscribe to watch movies');
-          navigate(createPageUrl('Subscribe'));
-          return;
-        }
-        
         setUser(currentUser);
       } catch (e) {
-        navigate(createPageUrl('Subscribe'));
+        base44.auth.redirectToLogin();
       }
     };
     loadUser();
