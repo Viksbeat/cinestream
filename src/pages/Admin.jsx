@@ -855,8 +855,8 @@ export default function Admin() {
           <div className="space-y-6">
             {/* Flagged Reviews */}
             {flaggedReviews.length > 0 && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-6">
-                <h2 className="text-xl font-bold text-red-400 mb-4 flex items-center gap-2">
+              <div className="bg-red-50 border border-red-200 rounded-xl p-6">
+                <h2 className="text-xl font-bold text-red-600 mb-4 flex items-center gap-2">
                   <AlertCircle className="w-5 h-5" />
                   Flagged Reviews ({flaggedReviews.length})
                 </h2>
