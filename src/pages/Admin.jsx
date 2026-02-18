@@ -912,34 +912,34 @@ export default function Admin() {
             )}
 
             {/* All Reviews */}
-            <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
-              <div className="p-6 border-b border-white/10">
-                <h2 className="text-xl font-bold">All Reviews ({allReviews.length})</h2>
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="p-6 border-b border-gray-200">
+                <h2 className="text-xl font-bold text-gray-900">All Reviews ({allReviews.length})</h2>
               </div>
               <Table>
                 <TableHeader>
-                  <TableRow className="border-white/10 hover:bg-transparent">
-                    <TableHead className="text-white/60">User</TableHead>
-                    <TableHead className="text-white/60">Movie</TableHead>
-                    <TableHead className="text-white/60">Rating</TableHead>
-                    <TableHead className="text-white/60 hidden md:table-cell">Review</TableHead>
-                    <TableHead className="text-white/60">Status</TableHead>
-                    <TableHead className="text-white/60 text-right">Actions</TableHead>
+                  <TableRow className="border-gray-200 hover:bg-transparent">
+                    <TableHead className="text-gray-500">User</TableHead>
+                    <TableHead className="text-gray-500">Movie</TableHead>
+                    <TableHead className="text-gray-500">Rating</TableHead>
+                    <TableHead className="text-gray-500 hidden md:table-cell">Review</TableHead>
+                    <TableHead className="text-gray-500">Status</TableHead>
+                    <TableHead className="text-gray-500 text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {allReviews.map((review) => {
                     const movie = movies.find(m => m.id === review.movie_id);
                     return (
-                      <TableRow key={review.id} className="border-white/10 hover:bg-white/5">
+                      <TableRow key={review.id} className="border-gray-100 hover:bg-gray-50">
                         <TableCell>
                           <div>
-                            <p className="font-medium text-sm">{review.user_name}</p>
-                            <p className="text-xs text-white/50">{review.user_email}</p>
+                            <p className="font-medium text-sm text-gray-900">{review.user_name}</p>
+                            <p className="text-xs text-gray-500">{review.user_email}</p>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <p className="text-sm">{movie?.title || 'Unknown'}</p>
+                          <p className="text-sm text-gray-900">{movie?.title || 'Unknown'}</p>
                         </TableCell>
                         <TableCell>
                           <div className="flex gap-0.5">
