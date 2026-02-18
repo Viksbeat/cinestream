@@ -334,18 +334,18 @@ export default function Admin() {
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8">
+    <div className="min-h-screen bg-gray-50 text-gray-900 p-4 md:p-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-4">
           <Link to={createPageUrl('Home')}>
-            <Button variant="ghost" size="icon" className="rounded-full hover:bg-white/10">
+            <Button variant="ghost" size="icon" className="rounded-full hover:bg-gray-200 text-gray-700">
               <ArrowLeft className="w-5 h-5" />
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold">Admin Panel</h1>
-            <p className="text-white/60">Manage movies, users, and analytics</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Admin Panel</h1>
+            <p className="text-gray-500">Manage movies, users, and analytics</p>
           </div>
         </div>
         {activeTab === 'movies' && (
