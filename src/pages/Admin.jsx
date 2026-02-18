@@ -1043,7 +1043,7 @@ export default function Admin() {
                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 required
                 rows={4}
-                className="bg-white/5 border-white/10"
+                className="border-gray-300"
               />
             </div>
 
