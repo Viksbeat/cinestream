@@ -864,11 +864,11 @@ export default function Admin() {
                   {flaggedReviews.map((review) => {
                     const movie = movies.find(m => m.id === review.movie_id);
                     return (
-                      <div key={review.id} className="bg-[#1a1a1a] rounded-lg p-4">
+                      <div key={review.id} className="bg-white rounded-lg p-4 border border-red-100">
                         <div className="flex items-start justify-between mb-3">
                           <div>
-                            <p className="font-medium">{review.user_name}</p>
-                            <p className="text-sm text-white/60">{movie?.title}</p>
+                            <p className="font-medium text-gray-900">{review.user_name}</p>
+                            <p className="text-sm text-gray-500">{movie?.title}</p>
                             <div className="flex gap-0.5 mt-1">
                               {[1, 2, 3, 4, 5].map((star) => (
                                 <Star
