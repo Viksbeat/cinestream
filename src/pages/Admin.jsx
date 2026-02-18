@@ -440,11 +440,11 @@ export default function Admin() {
             
             <div className="space-y-4 mb-6">
               <div>
-                <Label className="block text-sm font-medium mb-2">User Email</Label>
+                <Label className="block text-sm font-medium mb-2 text-gray-700">User Email</Label>
                 <Input
                   type="email"
                   placeholder="user@example.com"
-                  className="bg-white/5 border-white/10"
+                  className="border-gray-300"
                   id="debug-email"
                 />
               </div>
