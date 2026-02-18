@@ -515,25 +515,25 @@ export default function Admin() {
           <div className="space-y-8">
             {/* Top Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
                 <Eye className="w-6 h-6 text-[#D4AF37] mb-2" />
-                <p className="text-2xl font-bold">{allWatchHistory.length}</p>
-                <p className="text-sm text-white/60">Total Views</p>
+                <p className="text-2xl font-bold text-gray-900">{allWatchHistory.length}</p>
+                <p className="text-sm text-gray-500">Total Views</p>
               </div>
-              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
                 <Users className="w-6 h-6 text-[#D4AF37] mb-2" />
-                <p className="text-2xl font-bold">{allUsers.length}</p>
-                <p className="text-sm text-white/60">Total Users</p>
+                <p className="text-2xl font-bold text-gray-900">{allUsers.length}</p>
+                <p className="text-sm text-gray-500">Total Users</p>
               </div>
-              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
                 <Star className="w-6 h-6 text-[#D4AF37] mb-2" />
-                <p className="text-2xl font-bold">{allReviewsForAnalytics.length}</p>
-                <p className="text-sm text-white/60">Total Reviews</p>
+                <p className="text-2xl font-bold text-gray-900">{allReviewsForAnalytics.length}</p>
+                <p className="text-sm text-gray-500">Total Reviews</p>
               </div>
-              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
                 <Film className="w-6 h-6 text-[#D4AF37] mb-2" />
-                <p className="text-2xl font-bold">{movies.length}</p>
-                <p className="text-sm text-white/60">Total Movies</p>
+                <p className="text-2xl font-bold text-gray-900">{movies.length}</p>
+                <p className="text-sm text-gray-500">Total Movies</p>
               </div>
             </div>
 
