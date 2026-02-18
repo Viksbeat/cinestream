@@ -1077,7 +1077,7 @@ export default function Admin() {
                   type="number"
                   value={formData.release_year}
                   onChange={(e) => setFormData(prev => ({ ...prev, release_year: parseInt(e.target.value) }))}
-                  className="bg-white/5 border-white/10"
+                  className="border-gray-300"
                 />
               </div>
               <div className="space-y-2">
@@ -1086,7 +1086,7 @@ export default function Admin() {
                   value={formData.duration}
                   onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
                   placeholder="2h 15m"
-                  className="bg-white/5 border-white/10"
+                  className="border-gray-300"
                 />
               </div>
               <div className="space-y-2">
@@ -1095,10 +1095,10 @@ export default function Admin() {
                   value={formData.rating}
                   onValueChange={(value) => setFormData(prev => ({ ...prev, rating: value }))}
                 >
-                  <SelectTrigger className="bg-white/5 border-white/10">
+                  <SelectTrigger className="border-gray-300">
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#1a1a1a] border-white/10">
+                  <SelectContent className="bg-white border-gray-200">
                     {RATINGS.map((r) => (
                       <SelectItem key={r} value={r}>{r}</SelectItem>
                     ))}
