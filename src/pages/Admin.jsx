@@ -1150,10 +1150,10 @@ export default function Admin() {
                       value={formData.poster_url}
                       onChange={(e) => setFormData(prev => ({ ...prev, poster_url: e.target.value }))}
                       placeholder="URL or upload"
-                      className="bg-white/5 border-white/10"
+                      className="border-gray-300"
                     />
                     <Label className="cursor-pointer">
-                      <div className="h-10 px-4 flex items-center justify-center rounded-md border border-white/20 hover:bg-white/10 transition-colors">
+                      <div className="h-10 px-4 flex items-center justify-center rounded-md border border-gray-300 hover:bg-gray-100 transition-colors">
                         <Upload className="w-4 h-4" />
                       </div>
                       <input
