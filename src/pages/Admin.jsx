@@ -1008,7 +1008,7 @@ export default function Admin() {
 
       {/* Add/Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-[#141414] border-white/10 text-white">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-white border-gray-200 text-gray-900">
           <DialogHeader>
             <DialogTitle className="text-xl">
               {selectedMovie ? 'Edit Movie' : 'Add New Movie'}
