@@ -1127,13 +1127,13 @@ export default function Admin() {
             <div className="space-y-2">
               <Label>Cast (comma separated)</Label>
               <Input
-                value={formData.cast.join(', ')}
-                onChange={(e) => setFormData(prev => ({ 
-                  ...prev, 
-                  cast: e.target.value.split(',').map(s => s.trim()).filter(Boolean)
-                }))}
-                placeholder="Actor 1, Actor 2, Actor 3"
-                className="bg-white/5 border-white/10"
+              value={formData.cast.join(', ')}
+              onChange={(e) => setFormData(prev => ({ 
+                ...prev, 
+                cast: e.target.value.split(',').map(s => s.trim()).filter(Boolean)
+              }))}
+              placeholder="Actor 1, Actor 2, Actor 3"
+              className="border-gray-300"
               />
             </div>
 
