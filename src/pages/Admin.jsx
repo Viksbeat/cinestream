@@ -728,44 +728,44 @@ export default function Admin() {
         <>
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
           <Film className="w-6 h-6 text-[#D4AF37] mb-2" />
-          <p className="text-2xl font-bold">{movies.length}</p>
-          <p className="text-sm text-white/60">Total Movies</p>
+          <p className="text-2xl font-bold text-gray-900">{movies.length}</p>
+          <p className="text-sm text-gray-500">Total Movies</p>
         </div>
-        <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
           <Star className="w-6 h-6 text-[#D4AF37] mb-2" />
-          <p className="text-2xl font-bold">{movies.filter(m => m.is_featured).length}</p>
-          <p className="text-sm text-white/60">Featured</p>
+          <p className="text-2xl font-bold text-gray-900">{movies.filter(m => m.is_featured).length}</p>
+          <p className="text-sm text-gray-500">Featured</p>
         </div>
-        <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
           <Video className="w-6 h-6 text-[#D4AF37] mb-2" />
-          <p className="text-2xl font-bold">{movies.filter(m => m.video_url).length}</p>
-          <p className="text-sm text-white/60">With Video</p>
+          <p className="text-2xl font-bold text-gray-900">{movies.filter(m => m.video_url).length}</p>
+          <p className="text-sm text-gray-500">With Video</p>
         </div>
-        <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
           <Image className="w-6 h-6 text-[#D4AF37] mb-2" />
-          <p className="text-2xl font-bold">{movies.filter(m => m.poster_url).length}</p>
-          <p className="text-sm text-white/60">With Poster</p>
+          <p className="text-2xl font-bold text-gray-900">{movies.filter(m => m.poster_url).length}</p>
+          <p className="text-sm text-gray-500">With Poster</p>
         </div>
       </div>
 
       {/* Movies Table */}
-      <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="border-white/10 hover:bg-transparent">
-              <TableHead className="text-white/60">Movie</TableHead>
-              <TableHead className="text-white/60 hidden md:table-cell">Genre</TableHead>
-              <TableHead className="text-white/60 hidden md:table-cell">Category</TableHead>
-              <TableHead className="text-white/60 hidden lg:table-cell">Year</TableHead>
-              <TableHead className="text-white/60 hidden lg:table-cell">Status</TableHead>
-              <TableHead className="text-white/60 text-right">Actions</TableHead>
+            <TableRow className="border-gray-200 hover:bg-transparent">
+              <TableHead className="text-gray-500">Movie</TableHead>
+              <TableHead className="text-gray-500 hidden md:table-cell">Genre</TableHead>
+              <TableHead className="text-gray-500 hidden md:table-cell">Category</TableHead>
+              <TableHead className="text-gray-500 hidden lg:table-cell">Year</TableHead>
+              <TableHead className="text-gray-500 hidden lg:table-cell">Status</TableHead>
+              <TableHead className="text-gray-500 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {movies.map((movie) => (
-              <TableRow key={movie.id} className="border-white/10 hover:bg-white/5">
+              <TableRow key={movie.id} className="border-gray-100 hover:bg-gray-50">
                 <TableCell>
                   <div className="flex items-center gap-3">
                     {movie.poster_url ? (
@@ -775,13 +775,13 @@ export default function Admin() {
                         className="w-10 h-14 object-cover rounded"
                       />
                     ) : (
-                      <div className="w-10 h-14 bg-white/10 rounded flex items-center justify-center">
-                        <Film className="w-5 h-5 text-white/30" />
+                      <div className="w-10 h-14 bg-gray-100 rounded flex items-center justify-center">
+                        <Film className="w-5 h-5 text-gray-400" />
                       </div>
                     )}
                     <div>
-                      <p className="font-medium">{movie.title}</p>
-                      <p className="text-sm text-white/50 line-clamp-1 max-w-xs">
+                      <p className="font-medium text-gray-900">{movie.title}</p>
+                      <p className="text-sm text-gray-500 line-clamp-1 max-w-xs">
                         {movie.description}
                       </p>
                     </div>
@@ -790,18 +790,18 @@ export default function Admin() {
                 <TableCell className="hidden md:table-cell">
                   <div className="flex flex-wrap gap-1">
                     {movie.genre?.slice(0, 2).map((g, i) => (
-                      <Badge key={i} variant="secondary" className="bg-white/10 text-white text-xs">
+                      <Badge key={i} variant="secondary" className="bg-gray-100 text-gray-700 text-xs">
                         {g}
                       </Badge>
                     ))}
                   </div>
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
-                  <Badge variant="outline" className="border-[#D4AF37]/50 text-[#D4AF37]">
+                  <Badge variant="outline" className="border-[#D4AF37]/70 text-[#b8952e]">
                     {movie.category?.replace('_', ' ') || 'None'}
                   </Badge>
                 </TableCell>
-                <TableCell className="hidden lg:table-cell">
+                <TableCell className="hidden lg:table-cell text-gray-700">
                   {movie.release_year || '-'}
                 </TableCell>
                 <TableCell className="hidden lg:table-cell">
@@ -810,7 +810,7 @@ export default function Admin() {
                       <Badge className="bg-[#D4AF37] text-black">Featured</Badge>
                     )}
                     {movie.video_url && (
-                      <Badge variant="outline" className="border-green-500/50 text-green-500">
+                      <Badge variant="outline" className="border-green-500 text-green-600">
                         Video
                       </Badge>
                     )}
@@ -822,7 +822,7 @@ export default function Admin() {
                       variant="ghost"
                       size="icon"
                       onClick={() => handleEdit(movie)}
-                      className="hover:bg-white/10"
+                      className="hover:bg-gray-100 text-gray-600"
                     >
                       <Pencil className="w-4 h-4" />
                     </Button>
@@ -830,7 +830,7 @@ export default function Admin() {
                       variant="ghost"
                       size="icon"
                       onClick={() => handleDelete(movie)}
-                      className="hover:bg-red-500/20 text-red-400"
+                      className="hover:bg-red-50 text-red-500"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -840,7 +840,7 @@ export default function Admin() {
             ))}
             {movies.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-12 text-white/60">
+                <TableCell colSpan={6} className="text-center py-12 text-gray-400">
                   No movies yet. Click "Add Movie" to get started.
                 </TableCell>
               </TableRow>
