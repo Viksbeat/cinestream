@@ -538,8 +538,8 @@ export default function Admin() {
             </div>
 
             {/* Most Watched Movies */}
-            <div className="bg-white/5 rounded-xl border border-white/10 p-6">
-              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
                 <TrendingUp className="w-5 h-5 text-[#D4AF37]" />
                 Most Watched Movies
               </h2>
