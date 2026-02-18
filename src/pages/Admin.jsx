@@ -902,7 +902,7 @@ export default function Admin() {
                           </div>
                         </div>
                         {review.review_text && (
-                          <p className="text-white/80 text-sm">{review.review_text}</p>
+                          <p className="text-gray-700 text-sm">{review.review_text}</p>
                         )}
                       </div>
                     );
