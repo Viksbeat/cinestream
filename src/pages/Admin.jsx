@@ -1060,7 +1060,7 @@ export default function Admin() {
                     onClick={() => handleGenreToggle(genre)}
                     className={formData.genre.includes(genre)
                       ? 'bg-[#D4AF37] hover:bg-[#E5C158] text-black'
-                      : 'border-white/20 hover:bg-white/10'
+                      : 'border-gray-300 hover:bg-gray-100 text-gray-700'
                     }
                   >
                     {genre}
