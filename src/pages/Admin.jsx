@@ -1023,7 +1023,7 @@ export default function Admin() {
                   value={formData.title}
                   onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                   required
-                  className="bg-white/5 border-white/10"
+                  className="border-gray-300"
                 />
               </div>
               <div className="space-y-2">
@@ -1031,7 +1031,7 @@ export default function Admin() {
                 <Input
                   value={formData.director}
                   onChange={(e) => setFormData(prev => ({ ...prev, director: e.target.value }))}
-                  className="bg-white/5 border-white/10"
+                  className="border-gray-300"
                 />
               </div>
             </div>
