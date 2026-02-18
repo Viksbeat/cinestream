@@ -435,8 +435,8 @@ export default function Admin() {
       {activeTab === 'subscriptions' ? (
         <>
           {/* Subscription Debugging */}
-          <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-            <h3 className="text-xl font-bold mb-4">Subscription Debugging</h3>
+          <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+            <h3 className="text-xl font-bold mb-4 text-gray-900">Subscription Debugging</h3>
             
             <div className="space-y-4 mb-6">
               <div>
