@@ -650,47 +650,47 @@ export default function Admin() {
             </div>
             <Table>
               <TableHeader>
-                <TableRow className="border-white/10 hover:bg-transparent">
-                  <TableHead className="text-white/60">User</TableHead>
-                  <TableHead className="text-white/60 hidden md:table-cell">Role</TableHead>
-                  <TableHead className="text-white/60 hidden lg:table-cell">Favorite Genres</TableHead>
-                  <TableHead className="text-white/60 hidden lg:table-cell">Joined</TableHead>
-                  <TableHead className="text-white/60 text-right">Actions</TableHead>
+                <TableRow className="border-gray-200 hover:bg-transparent">
+                  <TableHead className="text-gray-500">User</TableHead>
+                  <TableHead className="text-gray-500 hidden md:table-cell">Role</TableHead>
+                  <TableHead className="text-gray-500 hidden lg:table-cell">Favorite Genres</TableHead>
+                  <TableHead className="text-gray-500 hidden lg:table-cell">Joined</TableHead>
+                  <TableHead className="text-gray-500 text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {allUsers.map((u) => (
-                  <TableRow key={u.id} className="border-white/10 hover:bg-white/5">
+                  <TableRow key={u.id} className="border-gray-100 hover:bg-gray-50">
                     <TableCell>
                       <div>
-                        <p className="font-medium">{u.full_name}</p>
-                        <p className="text-sm text-white/50">{u.email}</p>
+                        <p className="font-medium text-gray-900">{u.full_name}</p>
+                        <p className="text-sm text-gray-500">{u.email}</p>
                       </div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
                       <Badge variant={u.role === 'admin' ? 'default' : 'outline'} 
-                        className={u.role === 'admin' ? 'bg-[#D4AF37] text-black' : 'border-white/30'}>
+                        className={u.role === 'admin' ? 'bg-[#D4AF37] text-black' : 'border-gray-300 text-gray-600'}>
                         {u.role === 'admin' ? 'Admin' : 'User'}
                       </Badge>
                     </TableCell>
                     <TableCell className="hidden lg:table-cell">
                       <div className="flex flex-wrap gap-1">
                         {u.favorite_genre?.slice(0, 3).map((g, i) => (
-                          <Badge key={i} variant="secondary" className="bg-white/10 text-white text-xs">
+                          <Badge key={i} variant="secondary" className="bg-gray-100 text-gray-700 text-xs">
                             {g}
                           </Badge>
                         ))}
                         {u.favorite_genre?.length > 3 && (
-                          <Badge variant="secondary" className="bg-white/10 text-white text-xs">
+                          <Badge variant="secondary" className="bg-gray-100 text-gray-700 text-xs">
                             +{u.favorite_genre.length - 3}
                           </Badge>
                         )}
                         {!u.favorite_genre?.length && (
-                          <span className="text-white/40 text-sm">Not set</span>
+                          <span className="text-gray-400 text-sm">Not set</span>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell className="hidden lg:table-cell text-white/60 text-sm">
+                    <TableCell className="hidden lg:table-cell text-gray-500 text-sm">
                       {new Date(u.created_date).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
