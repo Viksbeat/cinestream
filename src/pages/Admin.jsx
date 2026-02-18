@@ -635,14 +635,14 @@ export default function Admin() {
       ) : activeTab === 'users' ? (
         <>
           {/* Users Table */}
-          <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
-            <div className="p-6 border-b border-white/10 flex items-center justify-between">
-              <h2 className="text-xl font-bold">All Users ({allUsers.length})</h2>
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-900">All Users ({allUsers.length})</h2>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => refetchUsers()}
-                className="border-white/20 hover:bg-white/10"
+                className="border-gray-300 hover:bg-gray-100 text-gray-700"
               >
                 <Loader2 className="w-4 h-4 mr-2" />
                 Refresh
