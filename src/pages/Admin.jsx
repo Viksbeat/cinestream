@@ -956,7 +956,7 @@ export default function Admin() {
                           </div>
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          <p className="text-sm text-white/60 line-clamp-2 max-w-xs">
+                          <p className="text-sm text-gray-500 line-clamp-2 max-w-xs">
                             {review.review_text || '-'}
                           </p>
                         </TableCell>
