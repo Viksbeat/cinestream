@@ -994,7 +994,7 @@ export default function Admin() {
                   })}
                   {allReviews.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-12 text-white/60">
+                      <TableCell colSpan={6} className="text-center py-12 text-gray-400">
                         No reviews yet
                       </TableCell>
                     </TableRow>
