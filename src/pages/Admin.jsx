@@ -609,15 +609,15 @@ export default function Admin() {
                     const movie = movies.find(m => m.id === item.movieId);
                     if (!movie) return null;
                     return (
-                      <div key={item.movieId} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                      <div key={item.movieId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center gap-3">
-                          <span className="text-2xl font-bold text-white/40 w-8">#{idx + 1}</span>
+                          <span className="text-2xl font-bold text-gray-300 w-8">#{idx + 1}</span>
                           {movie.poster_url && (
                             <img src={movie.poster_url} alt={movie.title} className="w-10 h-14 object-cover rounded" />
                           )}
                           <div>
-                            <p className="font-medium">{movie.title}</p>
-                            <p className="text-sm text-white/50">{item.count} reviews</p>
+                            <p className="font-medium text-gray-900">{movie.title}</p>
+                            <p className="text-sm text-gray-500">{item.count} reviews</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
