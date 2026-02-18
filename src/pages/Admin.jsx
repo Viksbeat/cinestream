@@ -363,14 +363,14 @@ export default function Admin() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-8 border-b border-white/10">
+      <div className="flex gap-2 mb-8 border-b border-gray-200">
         <Button
           variant="ghost"
           onClick={() => setActiveTab('movies')}
           className={`rounded-none pb-3 ${
             activeTab === 'movies' 
-              ? 'border-b-2 border-[#D4AF37] text-[#D4AF37]' 
-              : 'text-white/60'
+              ? 'border-b-2 border-[#D4AF37] text-[#b8952e]' 
+              : 'text-gray-500 hover:text-gray-800'
           }`}
         >
           <Film className="w-4 h-4 mr-2" />
@@ -381,14 +381,14 @@ export default function Admin() {
           onClick={() => setActiveTab('reviews')}
           className={`rounded-none pb-3 relative ${
             activeTab === 'reviews' 
-              ? 'border-b-2 border-[#D4AF37] text-[#D4AF37]' 
-              : 'text-white/60'
+              ? 'border-b-2 border-[#D4AF37] text-[#b8952e]' 
+              : 'text-gray-500 hover:text-gray-800'
           }`}
         >
           <Star className="w-4 h-4 mr-2" />
           Reviews
           {flaggedReviews.length > 0 && (
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs flex items-center justify-center text-white">
               {flaggedReviews.length}
             </span>
           )}
@@ -398,8 +398,8 @@ export default function Admin() {
           onClick={() => setActiveTab('users')}
           className={`rounded-none pb-3 ${
             activeTab === 'users' 
-              ? 'border-b-2 border-[#D4AF37] text-[#D4AF37]' 
-              : 'text-white/60'
+              ? 'border-b-2 border-[#D4AF37] text-[#b8952e]' 
+              : 'text-gray-500 hover:text-gray-800'
           }`}
         >
           <Users className="w-4 h-4 mr-2" />
@@ -410,8 +410,8 @@ export default function Admin() {
           onClick={() => setActiveTab('subscriptions')}
           className={`rounded-none pb-3 ${
             activeTab === 'subscriptions' 
-              ? 'border-b-2 border-[#D4AF37] text-[#D4AF37]' 
-              : 'text-white/60'
+              ? 'border-b-2 border-[#D4AF37] text-[#b8952e]' 
+              : 'text-gray-500 hover:text-gray-800'
           }`}
         >
           <Crown className="w-4 h-4 mr-2" />
@@ -422,8 +422,8 @@ export default function Admin() {
           onClick={() => setActiveTab('analytics')}
           className={`rounded-none pb-3 ${
             activeTab === 'analytics' 
-              ? 'border-b-2 border-[#D4AF37] text-[#D4AF37]' 
-              : 'text-white/60'
+              ? 'border-b-2 border-[#D4AF37] text-[#b8952e]' 
+              : 'text-gray-500 hover:text-gray-800'
           }`}
         >
           <BarChart3 className="w-4 h-4 mr-2" />
