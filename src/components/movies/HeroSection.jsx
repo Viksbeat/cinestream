@@ -32,20 +32,18 @@ export default function HeroSection({ movie, onAddToList, isInList }) {
           movie.video_url.endsWith('.mp4') || movie.video_url.endsWith('.webm') ? (
             <video
               src={movie.video_url}
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
+              className="absolute inset-0 w-full h-full object-cover"
               autoPlay
               muted
               loop
               playsInline
-              onCanPlay={() => setVideoLoaded(true)}
             />
           ) : (
             <iframe
               src={movie.video_url.includes('?') ? `${movie.video_url}&autoplay=1&muted=1&loop=1&controls=0&preload=true` : `${movie.video_url}?autoplay=1&muted=1&loop=1&controls=0&preload=true`}
-              className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
+              className="absolute inset-0 w-full h-full"
               style={{ border: 'none', transform: 'scale(1.05)' }}
               allow="autoplay; encrypted-media"
-              onLoad={() => setVideoLoaded(true)}
               title={movie.title}
             />
           )
