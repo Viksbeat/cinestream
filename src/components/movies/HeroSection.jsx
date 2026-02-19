@@ -26,15 +26,8 @@ export default function HeroSection({ movie, onAddToList, isInList }) {
   return (
     <div className="relative h-[85vh] md:h-[90vh] w-full overflow-hidden">
       {/* Background: Video or Image */}
-      <div className="absolute inset-0">
-        {/* Fallback image always rendered beneath */}
-        <img
-          src={movie.backdrop_url || movie.poster_url}
-          alt={movie.title}
-          className="w-full h-full object-cover"
-        />
-
-        {/* Video overlay */}
+      <div className="absolute inset-0 bg-black">
+        {/* Video */}
         {hasVideo && (
           movie.video_url.endsWith('.mp4') || movie.video_url.endsWith('.webm') ? (
             <video
