@@ -49,6 +49,16 @@ export default function Player() {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        // Check subscription — admins bypass
+        if (currentUser.role !== 'admin') {
+          const isActive = currentUser.subscription_status === 'active' &&
+            currentUser.subscription_expires_at &&
+            new Date(currentUser.subscription_expires_at) > new Date();
+          if (!isActive) {
+            window.location.href = createPageUrl('Subscribe');
+            return;
+          }
+        }
       } catch (e) {
         base44.auth.redirectToLogin();
       }
