@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { Play, Plus, Info, Star, Film } from 'lucide-react';
 import { Button } from "@/components/ui/button";
