@@ -67,9 +67,18 @@ export default function Subscribe() {
     user?.subscription_expires_at &&
     new Date(user.subscription_expires_at) > new Date();
 
-  const handleSubscribe = (plan) => {
+  const handleSubscribe = async (plan) => {
     if (!window.Korapay) {
       toast.error('Payment gateway not loaded. Please refresh.');
+      return;
+    }
+
+    let publicKey = '';
+    try {
+      const { data } = await base44.functions.invoke('getKorapayConfig');
+      publicKey = data.public_key;
+    } catch {
+      toast.error('Could not load payment config.');
       return;
     }
 
@@ -77,7 +86,7 @@ export default function Subscribe() {
     setPaying(plan.id);
 
     window.Korapay.initialize({
-      key: import.meta.env.VITE_KORAPAY_PUBLIC_KEY || 'pk_test_placeholder',
+      key: publicKey,
       reference,
       amount: plan.price,
       currency: 'NGN',
