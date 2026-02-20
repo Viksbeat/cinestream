@@ -139,16 +139,14 @@ export default function HeroSection({ movie, onAddToList, isInList }) {
               transition={{ delay: 0.6 }}
               className="flex flex-wrap items-center gap-4"
             >
-              <Link to={createPageUrl('Player') + `?id=${movie.id}`} tabIndex={0}>
-                <Button
-                  size="lg"
-                  className="bg-[#D4AF37] hover:bg-[#E5C158] text-black font-bold px-8 py-6 text-lg xl:text-xl xl:px-12 xl:py-8 rounded-full gap-2 shadow-lg shadow-[#D4AF37]/30 transition-all"
-                  tabIndex={-1}
-                >
-                  <Play className="w-5 h-5 xl:w-6 xl:h-6 fill-current" />
-                  Watch Now
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                onClick={handleWatch}
+                className="bg-[#D4AF37] hover:bg-[#E5C158] text-black font-bold px-8 py-6 text-lg xl:text-xl xl:px-12 xl:py-8 rounded-full gap-2 shadow-lg shadow-[#D4AF37]/30 transition-all"
+              >
+                <Play className="w-5 h-5 xl:w-6 xl:h-6 fill-current" />
+                Watch Now
+              </Button>
               {movie.trailer_url && (
                 <Button
                   size="lg"
