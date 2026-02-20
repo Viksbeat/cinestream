@@ -59,6 +59,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Browse', icon: Film, page: 'Browse' },
     { name: 'My List', icon: Bookmark, page: 'MyList' },
     { name: 'History', icon: Clock, page: 'History' },
+    { name: 'Subscribe', icon: Crown, page: 'Subscribe' },
   ];
 
   if (currentPageName === 'Admin') {
