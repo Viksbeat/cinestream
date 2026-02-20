@@ -171,17 +171,15 @@ export default function HeroSection({ movie, onAddToList, isInList }) {
                 <Plus className={`w-5 h-5 xl:w-6 xl:h-6 ${isInList ? 'rotate-45' : ''} transition-transform`} />
                 {isInList ? 'In My List' : 'Add to List'}
               </Button>
-              <Link to={createPageUrl('Player') + `?id=${movie.id}`} tabIndex={0}>
-                <Button
-                  size="lg"
-                  variant="ghost"
-                  className="hover:bg-white/10 px-6 py-6 xl:px-8 xl:py-8 xl:text-lg rounded-full gap-2 transition-all"
-                  tabIndex={-1}
-                >
-                  <Info className="w-5 h-5 xl:w-6 xl:h-6" />
-                  More Info
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                variant="ghost"
+                onClick={handleWatch}
+                className="hover:bg-white/10 px-6 py-6 xl:px-8 xl:py-8 xl:text-lg rounded-full gap-2 transition-all"
+              >
+                <Info className="w-5 h-5 xl:w-6 xl:h-6" />
+                More Info
+              </Button>
             </motion.div>
           </motion.div>
         </div>
