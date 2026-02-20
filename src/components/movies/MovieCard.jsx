@@ -44,7 +44,7 @@ export default function MovieCard({ movie, onAddToList, isInList, index = 0 }) {
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            window.location.href = createPageUrl('Player') + `?id=${movie.id}`;
+            handleCardClick(e);
           }
         }}
       >
