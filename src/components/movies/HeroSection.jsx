@@ -10,6 +10,22 @@ import { base44 } from '@/api/base44Client';
 export default function HeroSection({ movie, onAddToList, isInList }) {
   const [showTrailer, setShowTrailer] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const navigate = useNavigate();
+
+  const handleWatch = async (e) => {
+    e.preventDefault();
+    try {
+      const u = await base44.auth.me();
+      const isSubscribed = u.role === 'admin' || (
+        u.subscription_status === 'active' &&
+        u.subscription_expires_at &&
+        new Date(u.subscription_expires_at) > new Date()
+      );
+      navigate(isSubscribed ? createPageUrl('Player') + `?id=${movie.id}` : createPageUrl('Subscribe'));
+    } catch {
+      navigate(createPageUrl('Player') + `?id=${movie.id}`);
+    }
+  };
   
   if (!movie) return null;
 
