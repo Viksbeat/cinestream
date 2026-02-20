@@ -8,12 +8,22 @@ export default function MovieCard({ movie, onAddToList, isInList, index = 0 }) {
   const [isHovered, setIsHovered] = useState(false);
   const [showTrailer, setShowTrailer] = useState(false);
 
-  const handleCardClick = (e) => {
+  const handleCardClick = async (e) => {
     // Only navigate if clicking on the card itself, not buttons
-    if (e.target.closest('button')) {
-      return;
+    if (e.target.closest('button')) return;
+    try {
+      const u = await import('@/api/base44Client').then(m => m.base44.auth.me());
+      const isSubscribed = u.role === 'admin' || (
+        u.subscription_status === 'active' &&
+        u.subscription_expires_at &&
+        new Date(u.subscription_expires_at) > new Date()
+      );
+      window.location.href = isSubscribed
+        ? createPageUrl('Player') + `?id=${movie.id}`
+        : createPageUrl('Subscribe');
+    } catch {
+      window.location.href = createPageUrl('Player') + `?id=${movie.id}`;
     }
-    window.location.href = createPageUrl('Player') + `?id=${movie.id}`;
   };
 
   return (
