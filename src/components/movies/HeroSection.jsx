@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { Play, Plus, Info, Star, Film } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion';
 import TrailerModal from './TrailerModal';
+import { base44 } from '@/api/base44Client';
 
 export default function HeroSection({ movie, onAddToList, isInList }) {
   const [showTrailer, setShowTrailer] = useState(false);
