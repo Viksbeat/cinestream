@@ -305,6 +305,17 @@ export default function Layout({ children, currentPageName }) {
         )}
       </header>
 
+      {/* Name prompt banner for new users */}
+      {user && !user.full_name && (
+        <div className="fixed top-[72px] md:top-[88px] left-0 right-0 z-40 bg-[#D4AF37] text-black px-4 py-2 flex items-center justify-center gap-3 text-sm font-medium">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          <span>Complete your profile — add your name so we can personalize your experience.</span>
+          <Link to={createPageUrl('Profile')} className="underline font-bold hover:text-black/70 whitespace-nowrap">
+            Update Profile →
+          </Link>
+        </div>
+      )}
+
       {/* Main Content */}
       <main className="min-h-screen">
         {children}
