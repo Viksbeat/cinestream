@@ -3,20 +3,32 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    
-    // Get current user - this will be triggered when they first log in
-    const user = await base44.auth.me();
-    
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    const body = await req.json();
+
+    // Support both: called from automation (event payload) or directly
+    let email, full_name;
+
+    if (body?.event?.entity_name === 'User' && body?.data) {
+      // Called from entity automation
+      email = body.data.email;
+      full_name = body.data.full_name;
+    } else {
+      // Called manually / from frontend
+      const user = await base44.auth.me();
+      if (!user) {
+        return Response.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+      email = user.email;
+      full_name = user.full_name;
     }
 
-    const { email, full_name } = user;
+    if (!email) {
+      return Response.json({ error: 'No email found' }, { status: 400 });
+    }
 
     // Get Gmail access token
     const accessToken = await base44.asServiceRole.connectors.getAccessToken('gmail');
 
-    // Create email content
     const subject = 'Welcome to MYVIBEFLIX! 🎬';
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #0a0a0a; color: #ffffff;">
@@ -28,11 +40,11 @@ Deno.serve(async (req) => {
         <h2 style="color: #D4AF37; font-size: 24px;">Welcome${full_name ? `, ${full_name}` : ''}! 🎉</h2>
         
         <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">
-          Thank you for joining MYVIBEFLIX! We're excited to have you as part of our community.
+          Thank you for joining MYVIBEFLIX! We're thrilled to have you as part of our community.
         </p>
         
         <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">
-          Get ready to explore thousands of movies and shows, all in one place. Here's what you can do:
+          You now have full access to stream our entire movie collection. Here's what awaits you:
         </p>
         
         <ul style="font-size: 16px; line-height: 1.8; color: #cccccc;">
@@ -60,7 +72,6 @@ Deno.serve(async (req) => {
       </div>
     `;
 
-    // Create RFC 2822 formatted email
     const emailLines = [
       `To: ${email}`,
       `Subject: ${subject}`,
@@ -69,23 +80,20 @@ Deno.serve(async (req) => {
       '',
       htmlContent
     ];
-    
+
     const emailContent = emailLines.join('\r\n');
     const encodedEmail = btoa(unescape(encodeURIComponent(emailContent)))
       .replace(/\+/g, '-')
       .replace(/\//g, '_')
       .replace(/=+$/, '');
 
-    // Send email via Gmail API
     const response = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        raw: encodedEmail
-      })
+      body: JSON.stringify({ raw: encodedEmail })
     });
 
     if (!response.ok) {
