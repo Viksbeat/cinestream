@@ -28,13 +28,10 @@ export default function Layout({ children, currentPageName }) {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
 
-        // Send welcome email if this is a new user (signed up within the last 2 minutes)
+        // Send welcome email once for new users
         if (currentUser) {
-          const createdAt = new Date(currentUser.created_date);
-          const now = new Date();
-          const diffMinutes = (now - createdAt) / 1000 / 60;
           const welcomeSentKey = `welcome_sent_${currentUser.email}`;
-          if (diffMinutes < 2 && !localStorage.getItem(welcomeSentKey)) {
+          if (!localStorage.getItem(welcomeSentKey)) {
             localStorage.setItem(welcomeSentKey, '1');
             base44.functions.invoke('sendWelcomeEmail', {}).catch(() => {});
           }
